@@ -1,1 +1,4 @@
-web_server/node_modules/*
+web-service/node_modules/*
+ml-service/.venv/*
+ml-service/__pycache__/*
+ml-service/models/*
