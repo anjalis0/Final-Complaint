@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="./assets/style.css">
+    <script src="https://kit.fontawesome.com/e7df210b8c.js" crossorigin="anonymous"></script>
+</head>
+<body class="auth-bg">
+    <header class="navbar"></header>
+    <div class="auth-container">
+      <h2><i class="fa-solid fa-right-to-bracket"></i> Login</h2>
+      <form id="loginForm" method="POST">
+          <input type="number" name="student_id" placeholder="Student ID" required oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+          <input type="password" name="password" placeholder="Password" required>
+          <button class="login" type="submit">Log in</button>
+      </form>
+      <div class="msg" id="msg"></div>
+      <a class="switch-link" href="signup.html">Don't have an account? Signup</a>
+      <a class="switch-link" href="index.html">Back to Home</a>
+    </div>
+    <script>
+document.getElementById('loginForm').onsubmit = async function(e) {
+    e.preventDefault();
+    console.log('Login form submitted');
+    const msgElement = document.getElementById('msg');
+    const submitButton = this.querySelector('button[type="submit"]');
+    
+    try {
+        // Disable submit button and show loading state
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Logging in...';
+        msgElement.innerText = '';
+        
+        const formData = new FormData(this);
+        const data = Object.fromEntries(formData.entries());
+        
+        // Client-side validation for student ID
+        if (!/^2023\d{4}$/.test(data.student_id)) {
+            msgElement.innerText = "Student ID must be in format: 2023XXXX";
+            return false;
+        }
+        console.log('Attempting login with:', { student_id: data.student_id });
+        
+        let res;
+        try {
+            // Always use localhost:3000 for API calls since that's where the server is running
+            console.log('Connecting to http://localhost:3000/api/login');
+            res = await fetch('http://localhost:3000/api/login', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            });
+            
+            if (!res.ok) {
+                throw new Error('Network response was not ok');
+            }
+        } catch (fetchError) {
+            console.error('Fetch error:', fetchError);
+            throw new Error('Failed to connect to the server. Please make sure the server is running.');
+        }
+        
+        const result = await res.json();
+        console.log('Login response:', result);
+        if(result.success) {
+            // Save real user info
+            localStorage.setItem('userName', result.name);
+            localStorage.setItem('userStudentId', result.student_id);
+            localStorage.setItem('userRole', result.role || 'student');
+            
+            msgElement.style.color = 'green';
+            msgElement.innerText = 'Login successful! Redirecting...';
+            
+            // Redirect based on user role after a short delay
+            setTimeout(() => {
+                if (result.role === 'admin') {
+                    window.location.href = "admin-dashboard.html";
+                } else {
+                    window.location.href = "dashboard.html";
+                }
+            }, 1000);
+        } else {
+            throw new Error(result.message || 'Invalid credentials');
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        msgElement.style.color = 'red';
+        msgElement.innerText = error.message || 'Login failed. Please try again.';
+    } finally {
+        // Reset button state
+        submitButton.disabled = false;
+        submitButton.innerHTML = 'Log in';
+    }
+};
+</script>
+</body>
+</html>

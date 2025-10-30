@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Thank You - Complaint Submitted</title>
+  <link rel="stylesheet" href="./assets/style.css">
+  <script src="https://kit.fontawesome.com/e7df210b8c.js" crossorigin="anonymous"></script>
+  <style>
+    .thank-you-container {
+      background-color: white;
+      padding: 30px;
+      margin-top: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      text-align: center;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .success-icon {
+      font-size: 5em;
+      color: #4CAF50;
+      margin-bottom: 20px;
+    }
+    .complaint-id {
+      background-color: #f5f5f5;
+      padding: 15px;
+      border-radius: 5px;
+      font-size: 1.5em;
+      font-weight: bold;
+      margin: 20px 0;
+      color: #333;
+      border: 1px dashed #ccc;
+    }
+    .action-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+    .action-button {
+      padding: 12px 20px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+    }
+    .track-button {
+      background-color: #2196F3;
+      color: white;
+    }
+    .track-button:hover {
+      background-color: #0b7dda;
+    }
+    .dashboard-button {
+      background-color: #f5f5f5;
+      color: #333;
+    }
+    .dashboard-button:hover {
+      background-color: #e0e0e0;
+    }
+    .my-complaints-button {
+      background-color: #9C27B0;
+      color: white;
+    }
+    .my-complaints-button:hover {
+      background-color: #7B1FA2;
+    }
+    .info-box {
+      background-color: #e3f2fd;
+      border-left: 4px solid #2196F3;
+      padding: 15px;
+      margin: 25px 0;
+      text-align: left;
+      border-radius: 4px;
+    }
+    .info-box p {
+      margin: 5px 0;
+      color: #333;
+    }
+    .info-box strong {
+      color: #0b7dda;
+    }
+    @media (max-width: 600px) {
+      .action-buttons {
+        flex-direction: column;
+      }
+      .action-button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body class="dashboard-bg">
+  <!-- Consistent Navbar for all pages -->
+  <header class="navbar">
+    <div class="logo">
+      <a href="index.html"><img src="./assets/img/logo.png" alt="Logo" height="70px"></a>
+    </div>
+    <nav class="links">
+      <li><a href="dashboard.html" class="nb">Dashboard</a></li>
+      <li><a href="my-complaints.html" class="nb">My Complaints</a></li>
+      <li><a href="submit-complaint.html" class="nb">Submit Complaint</a></li>
+      <li><a href="track-complaint.html" class="nb">Track Complaint</a></li>
+      <li>
+        <div class="profile-dropdown">
+          <button class="profile-btn" id="profileBtn">
+            <i class="fa-solid fa-user-circle"></i>
+            <span id="profileName"></span>
+            <i class="fa-solid fa-caret-down"></i>
+          </button>
+          <div class="profile-menu" id="profileMenu">
+            <div class="profile-info">
+              <i class="fa-solid fa-user"></i>
+              <div>
+                <div><strong id="profileUsername">Username</strong></div>
+                <div id="profileEmail" style="font-size:0.95em;color:#666;"></div>
+              </div>
+            </div>
+            <div class="profile-details">
+              <p><i class="fa-solid fa-id-card"></i> Student ID: <span id="profileEmailDetail"></span></p>
+              <p><i class="fa-solid fa-calendar"></i> Joined: <span id="profileJoined"></span></p>
+            </div>
+            <button class="logout-btn" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+          </div>
+        </div>
+      </li>
+    </nav>
+  </header>
+  
+  <div class="container">
+    <div class="thank-you-container">
+      <i class="fa-solid fa-circle-check success-icon"></i>
+      <h1>Thank You!</h1>
+      <p>Your complaint has been successfully submitted.</p>
+      
+      <div class="info-box">
+        <p><strong>Important:</strong> Please save your complaint ID for future reference. You'll need it to track the status of your complaint.</p>
+      </div>
+      
+      <h2>Your Complaint ID:</h2>
+      <div class="complaint-id" id="complaintId">Loading...</div>
+      
+      <div class="action-buttons">
+        <a href="#" class="action-button track-button" id="trackButton">
+          <i class="fa-solid fa-magnifying-glass"></i> Track This Complaint
+        </a>
+        <a href="my-complaints.html" class="action-button my-complaints-button">
+          <i class="fa-solid fa-list-check"></i> View My Complaints
+        </a>
+        <a href="dashboard.html" class="action-button dashboard-button">
+          <i class="fa-solid fa-home"></i> Back to Dashboard
+        </a>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+  // Check if user is logged in
+  const userName = localStorage.getItem('userName');
+  const userStudentId = localStorage.getItem('userStudentId');
+  const userRole = localStorage.getItem('userRole');
+  
+  // Redirect to login page if not logged in
+  if (!userName || !userStudentId) {
+    window.location.href = "login.html";
+  }
+  
+  // Set user info from localStorage
+  const userJoined = localStorage.getItem('userJoined') || '2025-07-07';
+
+  document.getElementById('profileName').innerText = userName;
+  document.getElementById('profileUsername').innerText = userName;
+  document.getElementById('profileEmail').innerText = userStudentId;
+  document.getElementById('profileEmailDetail').innerText = userStudentId;
+  document.getElementById('profileJoined').innerText = userJoined;
+
+  // Dropdown toggle
+  document.getElementById('profileBtn').onclick = function(e) {
+    e.stopPropagation();
+    document.getElementById('profileMenu').classList.toggle('show');
+  };
+  
+  // Hide dropdown when clicking outside
+  window.onclick = function(event) {
+    if (!event.target.closest('.profile-dropdown')) {
+      document.getElementById('profileMenu').classList.remove('show');
+    }
+  }
+  
+  // Logout functionality
+  document.getElementById('logoutBtn').onclick = function() {
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userStudentId');
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('userJoined');
+    window.location.href = "index.html";
+  };
+  
+  // Get complaint ID from URL parameters
+  function getComplaintIdFromUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('id');
+  }
+  
+  // Set complaint ID and track button link
+  window.onload = function() {
+    const complaintId = getComplaintIdFromUrl();
+    
+    if (complaintId) {
+      document.getElementById('complaintId').textContent = complaintId;
+      document.getElementById('trackButton').href = `track-complaint.html?id=${complaintId}`;
+    } else {
+      document.getElementById('complaintId').textContent = 'ID not available';
+      document.getElementById('trackButton').href = 'track-complaint.html';
+    }
+  };
+  </script>
+</body>
+</html>
