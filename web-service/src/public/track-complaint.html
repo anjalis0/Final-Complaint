@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Track Complaint</title>
+  <link rel="stylesheet" href="./assets/style.css">
+  <script src="https://kit.fontawesome.com/e7df210b8c.js" crossorigin="anonymous"></script>
+</head>
+<body class="dashboard-bg">
+  <!-- Consistent Navbar for all pages -->
+  <header class="navbar">
+    <div class="logo">
+      <a href="index.html"><img src="./assets/img/logo.png" alt="Logo" height="70px"></a>
+    </div>
+    <nav class="links">
+      <li><a href="submit-complaint.html" class="nb">Submit Complaint</a></li>
+      <li><a href="track-complaint.html" class="nb active">Track Complaint</a></li>
+      <li><a href="my-complaints.html" class="nb"><i class="fa-solid fa-list-check"></i> My Complaints</a></li>
+      <li>
+        <div class="profile-dropdown">
+          <button class="profile-btn" id="profileBtn">
+            <i class="fa-solid fa-user-circle"></i>
+            <span id="profileName"></span>
+            <i class="fa-solid fa-caret-down"></i>
+          </button>
+          <div class="profile-menu" id="profileMenu">
+            <div class="profile-info">
+              <i class="fa-solid fa-user"></i>
+              <div>
+                <div><strong id="profileUsername">Username</strong></div>
+                <div id="profileEmail" style="font-size:0.95em;color:#666;"></div>
+              </div>
+            </div>
+            <div class="profile-details">
+              <p><i class="fa-solid fa-id-card"></i> Student ID: <span id="profileEmailDetail"></span></p>
+              <p><i class="fa-solid fa-calendar"></i> Joined: <span id="profileJoined"></span></p>
+            </div>
+            <button class="logout-btn" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+          </div>
+        </div>
+      </li>
+    </nav>
+  </header>
+  
+  <div class="form-container">
+    <h1><i class="fa-solid fa-magnifying-glass"></i> Track Your Complaint</h1>
+    <form id="trackForm">
+      <div class="form-group">
+        <label for="complaintId">Complaint ID</label>
+        <input type="text" id="complaintId" name="complaintId" placeholder="Enter your complaint ID" required>
+      </div>
+      
+      <button type="submit" class="track-btn">Track Complaint</button>
+    </form>
+    
+    <div id="resultContainer" style="display: none; margin-top: 30px;">
+      <h2>Complaint Details</h2>
+      <div class="complaint-details">
+        <div class="detail-row">
+          <span class="detail-label">Complaint ID:</span>
+          <span class="detail-value" id="resultId"></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Subject:</span>
+          <span class="detail-value" id="resultSubject"></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Category:</span>
+          <span class="detail-value" id="resultCategory"></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Status:</span>
+          <span class="detail-value status" id="resultStatus"></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Submitted:</span>
+          <span class="detail-value" id="resultDate"></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Description:</span>
+          <span class="detail-value" id="resultDescription"></span>
+        </div>
+        <div class="detail-row" id="attachmentRow" style="display: none;">
+          <span class="detail-label">Attachment:</span>
+          <span class="detail-value" id="resultAttachment"></span>
+        </div>
+      </div>
+      
+      <div class="status-timeline">
+        <h3>Status Timeline</h3>
+        <ul id="statusTimeline">
+          <!-- Timeline items will be added here -->
+        </ul>
+      </div>
+    </div>
+    
+    <style>
+      /* Status notification styles */
+      .status-notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background-color: #4caf50;
+        color: white;
+        padding: 15px 20px;
+        border-radius: 4px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        z-index: 1000;
+        animation: slideIn 0.5s ease-out;
+      }
+      
+      @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+      }
+      
+      .status-notification.fade-out {
+        animation: fadeOut 0.5s ease-in forwards;
+      }
+      
+      @keyframes fadeOut {
+        from { opacity: 1; }
+        to { opacity: 0; }
+      }
+      
+      /* Timeline styles */
+      .status-timeline {
+        margin-top: 30px;
+        border-left: 2px solid #1976d2;
+        padding-left: 35px;
+      }
+      
+      .status-timeline h3 {
+        margin-bottom: 15px;
+        color: #1976d2;
+      }
+      
+      .status-timeline ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      
+      .status-timeline li {
+        position: relative;
+        padding: 15px 15px;
+        border-bottom: 1px solid #eee;
+      }
+      
+      .status-timeline li:before {
+        content: '';
+        position: absolute;
+        left: -41px;
+        top: 18px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: #1976d2;
+        border: 2px solid white;
+      }
+      
+      .timeline-date {
+        font-size: 0.85em;
+        color: #666;
+        margin-bottom: 5px;
+      }
+      
+      .timeline-status {
+        font-weight: bold;
+        color: #1976d2;
+        margin-bottom: 5px;
+      }
+      
+      .timeline-note {
+        color: #333;
+      }
+    </style>
+  </div>
+  
+  <script>
+  // Check if user is logged in
+  const userName = localStorage.getItem('userName');
+  const userStudentId = localStorage.getItem('userStudentId');
+  
+  // Redirect to login page if not logged in
+  if (!userName || !userStudentId) {
+    window.location.href = "login.html";
+  }
+  
+  // Set user info from localStorage
+  const userJoined = localStorage.getItem('userJoined') || '2025-07-07';
+
+  document.getElementById('profileName').innerText = userName;
+  document.getElementById('profileUsername').innerText = userName;
+  document.getElementById('profileEmail').innerText = userStudentId;
+  document.getElementById('profileEmailDetail').innerText = userStudentId;
+  document.getElementById('profileJoined').innerText = userJoined;
+
+  // Dropdown toggle
+  document.getElementById('profileBtn').onclick = function(e) {
+    e.stopPropagation();
+    document.getElementById('profileMenu').classList.toggle('show');
+  };
+  // Hide dropdown when clicking outside
+  window.onclick = function(event) {
+    if (!event.target.closest('.profile-dropdown')) {
+      document.getElementById('profileMenu').classList.remove('show');
+    }
+  }
+  // Logout functionality
+  document.getElementById('logoutBtn').onclick = function() {
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userStudentId');
+    localStorage.removeItem('userJoined');
+    window.location.href = "index.html";
+  };
+  
+  // Initialize WebSocket for real-time updates
+  let websocket;
+  let currentComplaintId = null;
+  
+  function initializeWebSocket() {
+    if ('WebSocket' in window) {
+      // Connect to WebSocket server
+      try {
+        // Close existing connection if any
+        if (websocket) {
+          websocket.close();
+        }
+        
+        websocket = new WebSocket('ws://localhost:3001');
+        
+        websocket.onopen = function() {
+          console.log('WebSocket connection established');
+          // Authenticate the user connection
+          websocket.send(JSON.stringify({
+            type: 'auth',
+            role: 'student',
+            userId: userStudentId
+          }));
+          
+          // If we have a current complaint ID, subscribe to updates for it
+          if (currentComplaintId) {
+            console.log('Subscribing to updates for complaint ID:', currentComplaintId);
+            websocket.send(JSON.stringify({
+              type: 'subscribe',
+              complaintId: currentComplaintId
+            }));
+          }
+        };
+        
+        websocket.onmessage = function(event) {
+          console.log('WebSocket message received:', event.data);
+          try {
+            const data = JSON.parse(event.data);
+            
+            if (data.type === 'status_update' && data.complaint) {
+              console.log('Status update received for complaint:', data.complaint.id);
+              // Only update if we're currently viewing this complaint
+              if (currentComplaintId && data.complaint.id.toString() === currentComplaintId.toString()) {
+                console.log('Updating status to:', data.complaint.status);
+                // Update the status display
+                document.getElementById('resultStatus').textContent = data.complaint.status;
+                updateComplaintStatus(data.complaint.status);
+                
+                // Add to timeline
+                addStatusUpdateToTimeline(data.complaint.status, data.complaint.updated_at);
+                
+                // Show notification
+                showStatusUpdateNotification(data.complaint.status);
+                
+                // Refresh the complaint data to get the latest status history
+                refreshComplaintData();
+              }
+            }
+          } catch (parseError) {
+            console.error('Error parsing WebSocket message:', parseError);
+          }
+        };
+        
+        websocket.onerror = function(error) {
+          console.error('WebSocket error:', error);
+        };
+        
+        websocket.onclose = function(event) {
+          console.log('WebSocket connection closed. Code:', event.code, 'Reason:', event.reason);
+          // Attempt to reconnect after a delay
+          setTimeout(initializeWebSocket, 5000);
+        };
+      } catch (error) {
+        console.error('Failed to establish WebSocket connection:', error);
+      }
+    }
+  }
+  
+  // Show notification for status updates
+  function showStatusUpdateNotification(status) {
+    const notification = document.createElement('div');
+    notification.className = 'status-notification';
+    notification.textContent = `Complaint status updated to: ${status}`;
+    
+    document.body.appendChild(notification);
+    
+    // Remove after 5 seconds
+    setTimeout(() => {
+      notification.classList.add('fade-out');
+      setTimeout(() => {
+        document.body.removeChild(notification);
+      }, 500);
+    }, 5000);
+  }
+  
+  // Update the complaint status display
+  function updateComplaintStatus(status) {
+    const statusElement = document.getElementById('resultStatus');
+    statusElement.textContent = status;
+    
+    // Update status color
+    statusElement.className = 'detail-value status';
+    if (status.toLowerCase() === 'resolved') {
+      statusElement.classList.add('status-resolved');
+    } else if (status.toLowerCase() === 'in progress' || status.toLowerCase() === 'processing') {
+      statusElement.classList.add('status-progress');
+    } else if (status.toLowerCase() === 'under review') {
+      statusElement.classList.add('status-review');
+    } else {
+      statusElement.classList.add('status-submitted');
+    }
+  }
+  
+  // Add a status update to the timeline
+  function addStatusUpdateToTimeline(status, timestamp) {
+    const timelineContainer = document.getElementById('statusTimeline');
+    const li = document.createElement('li');
+    
+    // Format the date
+    const date = new Date(timestamp);
+    const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+    
+    li.innerHTML = `
+      <div class="timeline-date">${formattedDate}</div>
+      <div class="timeline-status">${status}</div>
+      <div class="timeline-note">Status updated</div>
+    `;
+    
+    // Add to the beginning of the timeline
+    if (timelineContainer.firstChild) {
+      timelineContainer.insertBefore(li, timelineContainer.firstChild);
+    } else {
+      timelineContainer.appendChild(li);
+    }
+  }
+  
+  // Refresh complaint data when status is updated
+  async function refreshComplaintData() {
+    if (!currentComplaintId) return;
+    
+    try {
+      // Fetch complaint data from the server
+      let response;
+      try {
+        response = await fetch(`http://localhost:3000/api/complaints/${currentComplaintId}/track?student_id=${userStudentId}`);
+        
+        if (!response.ok) {
+          throw new Error('Failed to refresh complaint data');
+        }
+      } catch (fetchError) {
+        console.error('Fetch error during refresh:', fetchError);
+        return; // Silently fail on refresh attempts
+      }
+      
+      const data = await response.json();
+      
+      if (data.success && data.complaint) {
+        const complaint = data.complaint;
+        
+        // Update status
+        document.getElementById('resultStatus').textContent = complaint.status;
+        updateComplaintStatus(complaint.status);
+        
+        // Recreate timeline
+        const timelineContainer = document.getElementById('statusTimeline');
+        timelineContainer.innerHTML = '';
+        
+        // Add initial submission to timeline
+        const initialLi = document.createElement('li');
+        initialLi.innerHTML = `
+          <div class="timeline-date">${new Date(complaint.created_at).toLocaleDateString()}</div>
+          <div class="timeline-status">Submitted</div>
+          <div class="timeline-note">Complaint received</div>
+        `;
+        timelineContainer.appendChild(initialLi);
+        
+        // Add status updates to timeline if available
+        if (complaint.status_history && complaint.status_history.length > 0) {
+          // Sort by timestamp in ascending order (oldest first)
+          const sortedHistory = [...complaint.status_history].sort((a, b) => 
+            new Date(a.timestamp) - new Date(b.timestamp)
+          );
+          
+          sortedHistory.forEach(update => {
+            const li = document.createElement('li');
+            const updateDate = new Date(update.timestamp);
+            const formattedDate = updateDate.toLocaleDateString() + ' ' + updateDate.toLocaleTimeString();
+            
+            li.innerHTML = `
+              <div class="timeline-date">${formattedDate}</div>
+              <div class="timeline-status">${update.status.charAt(0).toUpperCase() + update.status.slice(1)}</div>
+              <div class="timeline-note">${update.note || 'Status updated'}</div>
+            `;
+            timelineContainer.appendChild(li);
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Error refreshing complaint data:', error);
+    }
+  }
+  
+  // Handle form submission
+  document.getElementById('trackForm').onsubmit = async function(e) {
+    e.preventDefault();
+    const complaintId = document.getElementById('complaintId').value;
+    currentComplaintId = complaintId;
+    
+    // Show loading indicator
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Tracking...';
+    submitBtn.disabled = true;
+    
+    // Initialize WebSocket connection for real-time updates
+    initializeWebSocket();
+    
+    try {
+      // Fetch complaint data from the server
+      let response;
+      try {
+        response = await fetch(`http://localhost:3000/api/complaints/${complaintId}/track?student_id=${userStudentId}`);
+        
+        if (!response.ok) {
+          throw new Error('Complaint not found or you do not have permission to view it');
+        }
+      } catch (fetchError) {
+        console.error('Fetch error:', fetchError);
+        throw new Error('Failed to connect to the server. Please make sure the server is running.');
+      }
+      
+      const data = await response.json();
+      
+      if (data.success && data.complaint) {
+        const complaint = data.complaint;
+        
+        // Fill in the details
+        document.getElementById('resultId').textContent = complaint.id;
+        document.getElementById('resultSubject').textContent = complaint.title || 'No Subject';
+        document.getElementById('resultCategory').textContent = complaint.category || 'Not Specified';
+        document.getElementById('resultStatus').textContent = complaint.status;
+        document.getElementById('resultDate').textContent = new Date(complaint.created_at).toLocaleString();
+        document.getElementById('resultDescription').textContent = complaint.description || 'No description available';
+        
+        // Handle attachment if available
+        const attachmentRow = document.getElementById('attachmentRow');
+        if (complaint.attachment_url || complaint.attachment_path) {
+          let attachmentUrl = complaint.attachment_url || complaint.attachment_path;
+          
+          // Make sure the path is absolute
+          if (attachmentUrl && !attachmentUrl.startsWith('http') && !attachmentUrl.startsWith('/')) {
+            attachmentUrl = '/' + attachmentUrl;
+          }
+          
+          console.log('Attachment URL:', attachmentUrl);
+          // Fix attachment URL if it's a relative path
+          if (attachmentUrl.startsWith('/uploads/')) {
+            attachmentUrl = 'http://localhost:3000' + attachmentUrl;
+            console.log('Fixed attachment URL:', attachmentUrl);
+          }
+          
+          // Create a more descriptive attachment link with icon
+          const fileName = attachmentUrl.split('/').pop();
+          document.getElementById('resultAttachment').innerHTML = `
+            <a href="${attachmentUrl}" target="_blank" class="attachment-link">
+              <i class="fa-solid fa-paperclip"></i> 
+              <span>View Attachment: ${fileName}</span>
+            </a>`;
+          attachmentRow.style.display = 'flex';
+          
+          // Log success for debugging
+          console.log('Attachment link created successfully for:', attachmentUrl);
+        } else {
+          console.log('No attachment found for complaint:', complaint.id);
+          attachmentRow.style.display = 'none';
+        }
+        
+        // Set status color
+        updateComplaintStatus(complaint.status);
+        
+        // Create timeline
+        const timelineContainer = document.getElementById('statusTimeline');
+        timelineContainer.innerHTML = '';
+        
+        // Add initial submission to timeline
+        const initialLi = document.createElement('li');
+        initialLi.innerHTML = `
+          <div class="timeline-date">${new Date(complaint.created_at).toLocaleDateString()}</div>
+          <div class="timeline-status">Submitted</div>
+          <div class="timeline-note">Complaint received</div>
+        `;
+        timelineContainer.appendChild(initialLi);
+        
+        // Add status updates to timeline if available
+        if (complaint.status_history && complaint.status_history.length > 0) {
+          console.log('Status history found:', complaint.status_history);
+          // Sort by timestamp in ascending order (oldest first)
+          const sortedHistory = [...complaint.status_history].sort((a, b) => 
+            new Date(a.timestamp) - new Date(b.timestamp)
+          );
+          
+          sortedHistory.forEach(update => {
+            const li = document.createElement('li');
+            const updateDate = new Date(update.timestamp);
+            const formattedDate = updateDate.toLocaleDateString() + ' ' + updateDate.toLocaleTimeString();
+            
+            li.innerHTML = `
+              <div class="timeline-date">${formattedDate}</div>
+              <div class="timeline-status">${update.status}</div>
+              <div class="timeline-note">${update.note || 'Status updated'}</div>
+            `;
+            timelineContainer.appendChild(li);
+          });
+        }
+        
+        // Show the result container
+        document.getElementById('resultContainer').style.display = 'block';
+        
+        // Subscribe to updates for this complaint via WebSocket
+        if (websocket && websocket.readyState === WebSocket.OPEN) {
+          console.log('Subscribing to updates for complaint ID:', currentComplaintId);
+          websocket.send(JSON.stringify({
+            type: 'subscribe',
+            complaintId: currentComplaintId
+          }));
+        } else {
+          console.log('WebSocket not ready, will subscribe when connection is established');
+          // The subscription will happen when the connection is established in the onopen handler
+        }
+      } else {
+        throw new Error(data.message || 'Failed to retrieve complaint details');
+      }
+    } catch (error) {
+      console.error('Error fetching complaint:', error);
+      alert(error.message || 'Complaint not found. Please check the ID and try again.');
+      document.getElementById('resultContainer').style.display = 'none';
+      currentComplaintId = null;
+    } finally {
+      // Reset button state
+      submitBtn.innerHTML = originalText;
+      submitBtn.disabled = false;
+    }
+  };
+  
+  // Initialize WebSocket connection
+  initializeWebSocket();
+  </script>
+</body>
+</html>

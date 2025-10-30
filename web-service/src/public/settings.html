@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Settings - Admin</title>
+  <link rel="stylesheet" href="./assets/style.css">
+  <script src="https://kit.fontawesome.com/e7df210b8c.js" crossorigin="anonymous"></script>
+  <style>
+    .admin-badge {
+      background-color: #ff5722;
+      color: white;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 0.8em;
+      margin-left: 8px;
+    }
+    .settings-container {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      margin-top: 20px;
+    }
+    .settings-tabs {
+      display: flex;
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 20px;
+    }
+    .settings-tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      font-weight: 500;
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s ease;
+    }
+    .settings-tab.active {
+      border-bottom-color: #1976d2;
+      color: #1976d2;
+    }
+    .settings-tab:hover:not(.active) {
+      border-bottom-color: #ddd;
+    }
+    .settings-content {
+      display: none;
+    }
+    .settings-content.active {
+      display: block;
+    }
+    .settings-section {
+      margin-bottom: 30px;
+    }
+    .settings-section h3 {
+      margin-bottom: 15px;
+      font-size: 1.2em;
+      color: #333;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1em;
+    }
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    .form-row {
+      display: flex;
+      gap: 15px;
+    }
+    .form-row .form-group {
+      flex: 1;
+    }
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 34px;
+    }
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    input:checked + .toggle-slider {
+      background-color: #1976d2;
+    }
+    input:checked + .toggle-slider:before {
+      transform: translateX(26px);
+    }
+    .toggle-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+    .toggle-label span {
+      font-weight: 500;
+    }
+    .save-btn {
+      background-color: #1976d2;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1em;
+      font-weight: 500;
+      margin-top: 10px;
+    }
+    .save-btn:hover {
+      background-color: #1565c0;
+    }
+    .settings-card {
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+    .settings-card h4 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      color: #333;
+    }
+    .settings-card p {
+      margin: 0;
+      color: #666;
+      font-size: 0.9em;
+    }
+    .backup-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    .backup-actions button {
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9em;
+    }
+    .backup-btn {
+      background-color: #1976d2;
+      color: white;
+      border: none;
+    }
+    .restore-btn {
+      background-color: #f5f5f5;
+      border: 1px solid #ddd;
+      color: #333;
+    }
+    .category-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 15px;
+      background-color: #f5f5f5;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+    .category-actions {
+      display: flex;
+      gap: 5px;
+    }
+    .category-actions button {
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      color: #1976d2;
+      padding: 5px;
+    }
+    .add-category-btn {
+      background-color: #388e3c;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body class="dashboard-bg">
+  <!-- Consistent Navbar for all pages -->
+  <header class="navbar">
+    <div class="logo">
+      <a href="index.html"><img src="./assets/img/logo.png" alt="Logo" height="70px"></a>
+    </div>
+    <nav class="links">
+      <li><a href="admin-dashboard.html" class="nb">Dashboard</a></li>
+      <li><a href="manage-complaints.html" class="nb">Manage Complaints</a></li>
+      <li><a href="manage-users.html" class="nb">Manage Users</a></li>
+      <li><a href="analytics.html" class="nb">Analytics</a></li>
+      <li><a href="settings.html" class="nb active">Settings</a></li>
+      <li>
+        <div class="profile-dropdown">
+          <button class="profile-btn" id="profileBtn">
+            <i class="fa-solid fa-user-shield"></i>
+            <span id="profileName"></span>
+            <span class="admin-badge">Admin</span>
+            <i class="fa-solid fa-caret-down"></i>
+          </button>
+          <div class="profile-menu" id="profileMenu">
+            <div class="profile-info">
+              <i class="fa-solid fa-user-shield"></i>
+              <div>
+                <div><strong id="profileUsername">Username</strong> <span class="admin-badge">Admin</span></div>
+                <div id="profileEmail" style="font-size:0.95em;color:#666;"></div>
+              </div>
+            </div>
+            <div class="profile-details">
+              <p><i class="fa-solid fa-id-card"></i> Student ID: <span id="profileEmailDetail"></span></p>
+              <p><i class="fa-solid fa-calendar"></i> Joined: <span id="profileJoined"></span></p>
+            </div>
+            <button class="logout-btn" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+          </div>
+        </div>
+      </li>
+    </nav>
+  </header>
+  
+  <div class="dashboard-container">
+    <h1><i class="fa-solid fa-cog"></i> System Settings</h1>
+    <p>Configure system settings and preferences.</p>
+    
+    <div class="settings-container">
+      <div class="settings-tabs">
+        <div class="settings-tab active" data-tab="general">General</div>
+        <div class="settings-tab" data-tab="notifications">Notifications</div>
+        <div class="settings-tab" data-tab="categories">Categories</div>
+        <div class="settings-tab" data-tab="backup">Backup & Restore</div>
+      </div>
+      
+      <!-- General Settings -->
+      <div class="settings-content active" id="general-settings">
+        <div class="settings-section">
+          <h3>System Information</h3>
+          <div class="settings-card">
+            <h4>System Version</h4>
+            <p>Smart Complaints System v1.0.0</p>
+          </div>
+          <div class="settings-card">
+            <h4>Last Updated</h4>
+            <p>July 15, 2023</p>
+          </div>
+        </div>
+        
+        <div class="settings-section">
+          <h3>General Settings</h3>
+          <form id="generalSettingsForm">
+            <div class="form-group">
+              <label for="systemName">System Name</label>
+              <input type="text" id="systemName" value="Smart Complaints Management System">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="adminEmail">Admin Contact Email</label>
+                <input type="email" id="adminEmail" value="admin@smartcomplaints.com">
+              </div>
+              <div class="form-group">
+                <label for="supportPhone">Support Phone Number</label>
+                <input type="tel" id="supportPhone" value="+1 (555) 123-4567">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="welcomeMessage">Welcome Message</label>
+              <textarea id="welcomeMessage">Welcome to the Smart Complaints Management System. We are here to help resolve your issues efficiently.</textarea>
+            </div>
+            <div class="toggle-label">
+              <span>Maintenance Mode</span>
+              <label class="toggle-switch">
+                <input type="checkbox" id="maintenanceMode">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="toggle-label">
+              <span>Allow Public Registration</span>
+              <label class="toggle-switch">
+                <input type="checkbox" id="allowRegistration" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <button type="submit" class="save-btn">Save Changes</button>
+          </form>
+        </div>
+      </div>
+      
+      <!-- Notification Settings -->
+      <div class="settings-content" id="notifications-settings">
+        <div class="settings-section">
+          <h3>Email Notifications</h3>
+          <form id="notificationSettingsForm">
+            <div class="toggle-label">
+              <span>Send Email on New Complaint</span>
+              <label class="toggle-switch">
+                <input type="checkbox" id="emailNewComplaint" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="toggle-label">
+              <span>Send Email on Status Change</span>
+              <label class="toggle-switch">
+                <input type="checkbox" id="emailStatusChange" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="toggle-label">
+              <span>Send Email on Comment Added</span>
+              <label class="toggle-switch">
+                <input type="checkbox" id="emailCommentAdded">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="toggle-label">
+              <span>Send Weekly Summary to Admins</span>
+              <label class="toggle-switch">
+                <input type="checkbox" id="emailWeeklySummary" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            
+            <div class="form-group">
+              <label for="emailTemplate">Email Template</label>
+              <textarea id="emailTemplate">Dear {user_name},
+
+{message_content}
+
+Thank you,
+Smart Complaints Management Team</textarea>
+            </div>
+            
+            <div class="form-group">
+              <label for="smtpServer">SMTP Server</label>
+              <input type="text" id="smtpServer" value="smtp.example.com">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="smtpPort">SMTP Port</label>
+                <input type="number" id="smtpPort" value="587">
+              </div>
+              <div class="form-group">
+                <label for="smtpUsername">SMTP Username</label>
+                <input type="text" id="smtpUsername" value="notifications@smartcomplaints.com">
+              </div>
+              <div class="form-group">
+                <label for="smtpPassword">SMTP Password</label>
+                <input type="password" id="smtpPassword" value="password123">
+              </div>
+            </div>
+            
+            <button type="submit" class="save-btn">Save Changes</button>
+          </form>
+        </div>
+      </div>
+      
+      <!-- Categories Settings -->
+      <div class="settings-content" id="categories-settings">
+        <div class="settings-section">
+          <h3>Complaint Categories</h3>
+          <div id="categoriesList">
+            <div class="category-item">
+              <span>Academic</span>
+              <div class="category-actions">
+                <button onclick="editCategory('Academic')"><i class="fa-solid fa-edit"></i></button>
+                <button onclick="deleteCategory('Academic')"><i class="fa-solid fa-trash"></i></button>
+              </div>
+            </div>
+            <div class="category-item">
+              <span>Administrative</span>
+              <div class="category-actions">
+                <button onclick="editCategory('Administrative')"><i class="fa-solid fa-edit"></i></button>
+                <button onclick="deleteCategory('Administrative')"><i class="fa-solid fa-trash"></i></button>
+              </div>
+            </div>
+            <div class="category-item">
+              <span>Facilities</span>
+              <div class="category-actions">
+                <button onclick="editCategory('Facilities')"><i class="fa-solid fa-edit"></i></button>
+                <button onclick="deleteCategory('Facilities')"><i class="fa-solid fa-trash"></i></button>
+              </div>
+            </div>
+            <div class="category-item">
+              <span>IT Services</span>
+              <div class="category-actions">
+                <button onclick="editCategory('IT Services')"><i class="fa-solid fa-edit"></i></button>
+                <button onclick="deleteCategory('IT Services')"><i class="fa-solid fa-trash"></i></button>
+              </div>
+            </div>
+            <div class="category-item">
+              <span>Library</span>
+              <div class="category-actions">
+                <button onclick="editCategory('Library')"><i class="fa-solid fa-edit"></i></button>
+                <button onclick="deleteCategory('Library')"><i class="fa-solid fa-trash"></i></button>
+              </div>
+            </div>
+            <div class="category-item">
+              <span>Other</span>
+              <div class="category-actions">
+                <button onclick="editCategory('Other')"><i class="fa-solid fa-edit"></i></button>
+                <button onclick="deleteCategory('Other')"><i class="fa-solid fa-trash"></i></button>
+              </div>
+            </div>
+          </div>
+          <button class="add-category-btn" id="addCategoryBtn"><i class="fa-solid fa-plus"></i> Add Category</button>
+        </div>
+        
+        <div class="settings-section">
+          <h3>Status Options</h3>
+          <div id="statusList">
+            <div class="category-item">
+              <span>Open</span>
+              <div class="category-actions">
+                <button onclick="editStatus('Open')"><i class="fa-solid fa-edit"></i></button>
+                <button onclick="deleteStatus('Open')" disabled><i class="fa-solid fa-trash"></i></button>
+              </div>
+            </div>
+            <div class="category-item">
+              <span>In Progress</span>
+              <div class="category-actions">
+                <button onclick="editStatus('In Progress')"><i class="fa-solid fa-edit"></i></button>
+                <button onclick="deleteStatus('In Progress')" disabled><i class="fa-solid fa-trash"></i></button>
+              </div>
+            </div>
+            <div class="category-item">
+              <span>Resolved</span>
+              <div class="category-actions">
+                <button onclick="editStatus('Resolved')"><i class="fa-solid fa-edit"></i></button>
+                <button onclick="deleteStatus('Resolved')" disabled><i class="fa-solid fa-trash"></i></button>
+              </div>
+            </div>
+            <div class="category-item">
+              <span>Closed</span>
+              <div class="category-actions">
+                <button onclick="editStatus('Closed')"><i class="fa-solid fa-edit"></i></button>
+                <button onclick="deleteStatus('Closed')" disabled><i class="fa-solid fa-trash"></i></button>
+              </div>
+            </div>
+          </div>
+          <button class="add-category-btn" id="addStatusBtn"><i class="fa-solid fa-plus"></i> Add Status</button>
+        </div>
+      </div>
+      
+      <!-- Backup & Restore Settings -->
+      <div class="settings-content" id="backup-settings">
+        <div class="settings-section">
+          <h3>Database Backup</h3>
+          <div class="settings-card">
+            <h4>Last Backup</h4>
+            <p>July 10, 2023 at 03:45 PM</p>
+            <div class="backup-actions">
+              <button class="backup-btn" id="createBackupBtn"><i class="fa-solid fa-download"></i> Create Backup</button>
+              <button class="restore-btn" id="scheduleBackupBtn"><i class="fa-solid fa-calendar"></i> Schedule Backup</button>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="backupSchedule">Automatic Backup Schedule</label>
+            <select id="backupSchedule">
+              <option value="daily">Daily</option>
+              <option value="weekly" selected>Weekly</option>
+              <option value="monthly">Monthly</option>
+              <option value="never">Never</option>
+            </select>
+          </div>
+          
+          <div class="toggle-label">
+            <span>Keep Backup History</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="keepBackupHistory" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          
+          <div class="form-group">
+            <label for="backupRetention">Backup Retention Period (days)</label>
+            <input type="number" id="backupRetention" value="30">
+          </div>
+        </div>
+        
+        <div class="settings-section">
+          <h3>Restore Database</h3>
+          <div class="form-group">
+            <label for="restoreFile">Upload Backup File</label>
+            <input type="file" id="restoreFile">
+          </div>
+          <button class="restore-btn" id="restoreBackupBtn"><i class="fa-solid fa-upload"></i> Restore from Backup</button>
+        </div>
+        
+        <div class="settings-section">
+          <h3>System Logs</h3>
+          <div class="toggle-label">
+            <span>Enable Detailed Logging</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="detailedLogging" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="form-group">
+            <label for="logRetention">Log Retention Period (days)</label>
+            <input type="number" id="logRetention" value="90">
+          </div>
+          <button class="backup-btn" id="downloadLogsBtn"><i class="fa-solid fa-file-download"></i> Download Logs</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+  // Check if user is logged in and is an admin
+  const userName = localStorage.getItem('userName');
+  const userStudentId = localStorage.getItem('userStudentId');
+  const userRole = localStorage.getItem('userRole');
+  
+  // Redirect to login page if not logged in or not an admin
+  if (!userName || !userStudentId) {
+    window.location.href = "login.html";
+  } else if (userRole !== 'admin') {
+    window.location.href = "dashboard.html";
+  }
+  
+  // Set user info from localStorage
+  const userJoined = localStorage.getItem('userJoined') || '2023-01-01';
+
+  document.getElementById('profileName').innerText = userName;
+  document.getElementById('profileUsername').innerText = userName;
+  document.getElementById('profileEmail').innerText = userStudentId;
+  document.getElementById('profileEmailDetail').innerText = userStudentId;
+  document.getElementById('profileJoined').innerText = userJoined;
+
+  // Dropdown toggle
+  document.getElementById('profileBtn').onclick = function(e) {
+    e.stopPropagation();
+    document.getElementById('profileMenu').classList.toggle('show');
+  };
+  
+  // Hide dropdown when clicking outside
+  window.onclick = function(event) {
+    if (!event.target.closest('.profile-dropdown')) {
+      document.getElementById('profileMenu').classList.remove('show');
+    }
+  }
+  
+  // Logout functionality
+  document.getElementById('logoutBtn').onclick = function() {
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userStudentId');
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('userJoined');
+    window.location.href = "index.html";
+  };
+  
+  // Tab switching functionality
+  const tabs = document.querySelectorAll('.settings-tab');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', function() {
+      // Remove active class from all tabs
+      tabs.forEach(t => t.classList.remove('active'));
+      
+      // Add active class to clicked tab
+      this.classList.add('active');
+      
+      // Hide all content sections
+      document.querySelectorAll('.settings-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      
+      // Show the corresponding content section
+      const tabId = this.getAttribute('data-tab');
+      document.getElementById(`${tabId}-settings`).classList.add('active');
+    });
+  });
+  
+  // Form submission handlers
+  document.getElementById('generalSettingsForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    alert('General settings saved successfully!');
+  });
+  
+  document.getElementById('notificationSettingsForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    alert('Notification settings saved successfully!');
+  });
+  
+  // Category management functions
+  function editCategory(categoryName) {
+    const newName = prompt(`Edit category name:`, categoryName);
+    if (newName && newName !== categoryName) {
+      alert(`Category renamed from "${categoryName}" to "${newName}"`);
+      // In a real app, this would update the database
+    }
+  }
+  
+  function deleteCategory(categoryName) {
+    if (confirm(`Are you sure you want to delete the category "${categoryName}"?`)) {
+      alert(`Category "${categoryName}" deleted successfully.`);
+      // In a real app, this would update the database
+    }
+  }
+  
+  function editStatus(statusName) {
+    const newName = prompt(`Edit status name:`, statusName);
+    if (newName && newName !== statusName) {
+      alert(`Status renamed from "${statusName}" to "${newName}"`);
+      // In a real app, this would update the database
+    }
+  }
+  
+  function deleteStatus(statusName) {
+    alert(`Default statuses cannot be deleted.`);
+  }
+  
+  // Add new category button
+  document.getElementById('addCategoryBtn').addEventListener('click', function() {
+    const newCategory = prompt('Enter new category name:');
+    if (newCategory) {
+      alert(`New category "${newCategory}" added successfully.`);
+      // In a real app, this would update the database and refresh the list
+    }
+  });
+  
+  // Add new status button
+  document.getElementById('addStatusBtn').addEventListener('click', function() {
+    const newStatus = prompt('Enter new status name:');
+    if (newStatus) {
+      alert(`New status "${newStatus}" added successfully.`);
+      // In a real app, this would update the database and refresh the list
+    }
+  });
+  
+  // Backup and restore functions
+  document.getElementById('createBackupBtn').addEventListener('click', function() {
+    alert('Database backup created successfully!');
+  });
+  
+  document.getElementById('scheduleBackupBtn').addEventListener('click', function() {
+    alert('Backup schedule updated successfully!');
+  });
+  
+  document.getElementById('restoreBackupBtn').addEventListener('click', function() {
+    const file = document.getElementById('restoreFile').value;
+    if (!file) {
+      alert('Please select a backup file to restore.');
+      return;
+    }
+    
+    if (confirm('Are you sure you want to restore the database from backup? This will overwrite current data.')) {
+      alert('Database restored successfully!');
+    }
+  });
+  
+  document.getElementById('downloadLogsBtn').addEventListener('click', function() {
+    alert('System logs downloaded successfully!');
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Manage Users - Admin</title>
+  <link rel="stylesheet" href="./assets/style.css">
+  <script src="https://kit.fontawesome.com/e7df210b8c.js" crossorigin="anonymous"></script>
+  <style>
+    .admin-badge {
+      background-color: #ff5722;
+      color: white;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 0.8em;
+      margin-left: 8px;
+    }
+    .users-container {
+      background-color: white;
+      padding: 20px;
+      margin-top: 20px;
+      overflow-x: auto; /* Add horizontal scroll for small screens */
+      height: calc(100vh - 180px); /* Full page height minus header and margins */
+    }
+    .users-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .search-filter {
+      display: flex;
+      gap: 10px;
+    }
+    .search-filter input, .search-filter select {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .search-filter button {
+      background-color: #1976d2;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .add-user-btn {
+      background-color: #388e3c;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .users-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed; /* Fixed table layout for better control */
+    }
+    .users-table th, .users-table td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+      word-wrap: break-word; /* Allow text to wrap */
+    }
+    /* Set specific widths for columns */
+    .users-table th:nth-child(1), .users-table td:nth-child(1) { width: 8%; } /* ID */
+    .users-table th:nth-child(2), .users-table td:nth-child(2) { width: 20%; } /* Name */
+    .users-table th:nth-child(3), .users-table td:nth-child(3) { width: 20%; } /* Student ID */
+    .users-table th:nth-child(4), .users-table td:nth-child(4) { width: 15%; } /* Role */
+    .users-table th:nth-child(5), .users-table td:nth-child(5) { width: 20%; } /* Joined Date */
+    .users-table th:nth-child(6), .users-table td:nth-child(6) { width: 15%; } /* Actions */
+    .users-table th {
+      background-color: #f5f5f5;
+      font-weight: bold;
+    }
+    .users-table tr:hover {
+      background-color: #f9f9f9;
+    }
+    .role-badge {
+      padding: 5px 10px;
+      border-radius: 12px;
+      font-size: 0.85em;
+      font-weight: 500;
+      display: inline-block; /* Ensure badge is always visible */
+      min-width: 80px; /* Minimum width for better visibility */
+      text-align: center; /* Center text in badge */
+    }
+    .role-admin {
+      background-color: #ffecb3;
+      color: #ff8f00;
+    }
+    .role-user {
+      background-color: #e3f2fd;
+      color: #1976d2;
+    }
+    .action-buttons {
+      display: flex;
+      gap: 5px;
+      flex-wrap: nowrap; /* Prevent buttons from wrapping */
+      justify-content: space-around; /* Distribute space evenly */
+    }
+    .action-buttons button {
+      border: none;
+      background-color: #f0f8ff; /* Light background for better visibility */
+      color: #1976d2;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 4px;
+      min-width: 32px; /* Minimum width for better clickability */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .action-buttons button:hover {
+      background-color: #e3f2fd;
+    }
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+      gap: 5px;
+    }
+    .pagination button {
+      border: 1px solid #ddd;
+      background-color: white;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .pagination button.active {
+      background-color: #1976d2;
+      color: white;
+      border-color: #1976d2;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+    }
+    .modal-content {
+      background-color: white;
+      margin: 10% auto;
+      padding: 20px;
+      border-radius: 8px;
+      width: 60%;
+      max-width: 600px;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .modal-header h2 {
+      margin: 0;
+    }
+    .close-btn {
+      font-size: 1.5em;
+      cursor: pointer;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .form-actions button {
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .cancel-btn {
+      background-color: #f5f5f5;
+      border: 1px solid #ddd;
+    }
+    .save-btn {
+      background-color: #1976d2;
+      color: white;
+      border: none;
+    }
+  </style>
+</head>
+<body class="dashboard-bg">
+  <!-- Consistent Navbar for all pages -->
+  <header class="navbar">
+    <div class="logo">
+      <a href="index.html"><img src="./assets/img/logo.png" alt="Logo" height="70px"></a>
+    </div>
+    <nav class="links">
+      <li><a href="admin-dashboard.html" class="nb">Dashboard</a></li>
+      <li><a href="manage-complaints.html" class="nb">Manage Complaints</a></li>
+      <li><a href="manage-users.html" class="nb active">Manage Users</a></li>
+      <li>
+        <div class="profile-dropdown">
+          <button class="profile-btn" id="profileBtn">
+            <i class="fa-solid fa-user-shield"></i>
+            <span id="profileName"></span>
+            <span class="admin-badge">Admin</span>
+            <i class="fa-solid fa-caret-down"></i>
+          </button>
+          <div class="profile-menu" id="profileMenu">
+            <div class="profile-info">
+              <i class="fa-solid fa-user-shield"></i>
+              <div>
+                <div><strong id="profileUsername">Username</strong> <span class="admin-badge">Admin</span></div>
+                <div id="profileEmail" style="font-size:0.95em;color:#666;"></div>
+              </div>
+            </div>
+            <div class="profile-details">
+              <p><i class="fa-solid fa-id-card"></i> Student ID: <span id="profileEmailDetail"></span></p>
+              <p><i class="fa-solid fa-calendar"></i> Joined: <span id="profileJoined"></span></p>
+            </div>
+            <button class="logout-btn" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+          </div>
+        </div>
+      </li>
+    </nav>
+  </header>
+  
+  <div class="dashboard-container" style="max-width: 100%; padding: 20px; margin: 0;">
+    <h1><i class="fa-solid fa-users-cog"></i> Manage Users</h1>
+    <p>View and manage all registered users in the system.</p>
+    
+    <div class="users-container">
+      <div class="users-header">
+        <div class="search-filter">
+          <input type="text" placeholder="Search users..." id="searchInput">
+          <select id="roleFilter">
+            <option value="all">All Roles</option>
+            <option value="admin">Admin</option>
+            <option value="user">User</option>
+          </select>
+          <button id="searchBtn"><i class="fa-solid fa-search"></i> Search</button>
+          <button id="refreshBtn"><i class="fa-solid fa-sync"></i> Refresh</button>
+        </div>
+        <button class="add-user-btn" id="addUserBtn"><i class="fa-solid fa-user-plus"></i> Add User</button>
+      </div>
+      
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Student ID</th>
+            <th>Role</th>
+            <th>Joined Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="usersTableBody">
+          <!-- User rows will be added here dynamically -->
+        </tbody>
+      </table>
+      
+      <div class="pagination" id="pagination">
+        <!-- Pagination buttons will be added dynamically -->
+      </div>
+    </div>
+  </div>
+  
+  <!-- Edit User Modal -->
+  <div id="userModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle">Edit User</h2>
+        <span class="close-btn" id="closeModal">&times;</span>
+      </div>
+      <form id="userForm">
+        <input type="hidden" id="userId">
+        <div class="form-group">
+          <label for="userName">Name:</label>
+          <input type="text" id="userName" required>
+        </div>
+        <div class="form-group">
+          <label for="userStudentId">Student ID:</label>
+          <input type="number" id="userStudentId" required>
+        </div>
+        <div class="form-group">
+          <label for="userRole">Role:</label>
+          <select id="userRole">
+            <option value="student">Student</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <div class="form-group" id="passwordGroup">
+          <label for="userPassword">Password:</label>
+          <input type="password" id="userPassword" placeholder="Leave blank to keep current password">
+        </div>
+        <div class="form-actions">
+          <button type="button" class="cancel-btn" id="cancelForm">Cancel</button>
+          <button type="submit" class="save-btn">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <script>
+  // Check if user is logged in and is an admin
+  const userName = localStorage.getItem('userName');
+  const userStudentId = localStorage.getItem('userStudentId');
+  const userRole = localStorage.getItem('userRole');
+  
+  // Redirect to login page if not logged in or not an admin
+  if (!userName || !userStudentId) {
+    window.location.href = "login.html";
+  } else if (userRole !== 'admin') {
+    window.location.href = "dashboard.html";
+  }
+  
+  // Set user info from localStorage
+  const userJoined = localStorage.getItem('userJoined') || '2025-07-07';
+
+  document.getElementById('profileName').innerText = userName;
+  document.getElementById('profileUsername').innerText = userName;
+  document.getElementById('profileEmail').innerText = userStudentId;
+  document.getElementById('profileEmailDetail').innerText = userStudentId;
+  document.getElementById('profileJoined').innerText = userJoined;
+
+  // Dropdown toggle
+  document.getElementById('profileBtn').onclick = function(e) {
+    e.stopPropagation();
+    document.getElementById('profileMenu').classList.toggle('show');
+  };
+  
+  // Hide dropdown when clicking outside
+  window.onclick = function(event) {
+    if (!event.target.closest('.profile-dropdown')) {
+      document.getElementById('profileMenu').classList.remove('show');
+    }
+  }
+  
+  // Logout functionality
+  document.getElementById('logoutBtn').onclick = function() {
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userStudentId');
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('userJoined');
+    window.location.href = "index.html";
+  };
+  
+  // Users data array
+  let users = [];
+  
+  // Fetch users from API
+  async function fetchUsers() {
+    try {
+      const response = await fetch('http://localhost:3000/api/users');
+      if (!response.ok) {
+        throw new Error('Failed to fetch users');
+      }
+      
+      const data = await response.json();
+      if (data.success && data.users) {
+        // Transform the data to match our expected format
+        users = data.users.map(user => ({
+          id: user.id,
+          name: user.name,
+          studentId: user.student_id,
+          role: user.role,
+          joinedDate: new Date(user.created_at).toISOString().split('T')[0]
+        }));
+        populateUsers(users);
+      } else {
+        console.error('Error fetching users:', data.message);
+        document.getElementById('usersTableBody').innerHTML = `
+          <tr>
+            <td colspan="6" style="text-align: center; padding: 20px;">
+              <i class="fa-solid fa-exclamation-triangle" style="color: #ff5722; margin-right: 10px;"></i>
+              Failed to load users. Please try again later.
+            </td>
+          </tr>
+        `;
+      }
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      document.getElementById('usersTableBody').innerHTML = `
+        <tr>
+          <td colspan="6" style="text-align: center; padding: 20px;">
+            <i class="fa-solid fa-exclamation-triangle" style="color: #ff5722; margin-right: 10px;"></i>
+            ${error.message || 'Failed to connect to server. Please check your connection.'}
+          </td>
+        </tr>
+      `;
+    }
+  }
+  
+  // Pagination variables
+  let currentPage = 1;
+  const itemsPerPage = 10;
+  let totalPages = 1;
+  
+  // Populate users table with pagination
+  function populateUsers(usersData) {
+    const tableBody = document.getElementById('usersTableBody');
+    tableBody.innerHTML = '';
+    
+    if (usersData.length === 0) {
+      tableBody.innerHTML = `
+        <tr>
+          <td colspan="6" style="text-align: center; padding: 20px;">
+            <i class="fa-solid fa-info-circle" style="color: #1976d2; margin-right: 10px;"></i>
+            No users found matching your criteria.
+          </td>
+        </tr>
+      `;
+      // Reset pagination
+      document.getElementById('pagination').innerHTML = '';
+      return;
+    }
+    
+    // Calculate total pages
+    totalPages = Math.ceil(usersData.length / itemsPerPage);
+    
+    // Ensure current page is valid
+    if (currentPage > totalPages) {
+      currentPage = totalPages;
+    }
+    
+    // Calculate start and end indices for current page
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = Math.min(startIndex + itemsPerPage, usersData.length);
+    
+    // Get current page data
+    const currentPageData = usersData.slice(startIndex, endIndex);
+    
+    // Populate table with current page data
+    currentPageData.forEach(user => {
+      const row = document.createElement('tr');
+      
+      // Create role badge with appropriate class
+      const roleClass = `role-${user.role}`;
+      const roleText = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+      const roleBadge = `<span class="role-badge ${roleClass}">${roleText}</span>`;
+      
+      row.innerHTML = `
+        <td>${user.id}</td>
+        <td>${user.name}</td>
+        <td>${user.studentId}</td>
+        <td>${roleBadge}</td>
+        <td>${user.joinedDate}</td>
+        <td class="action-buttons">
+          <button onclick="editUser(${user.id})"><i class="fa-solid fa-edit"></i></button>
+          <button onclick="resetPassword(${user.id})"><i class="fa-solid fa-key"></i></button>
+          <button onclick="deleteUser(${user.id})"><i class="fa-solid fa-trash"></i></button>
+        </td>
+      `;
+      
+      tableBody.appendChild(row);
+    });
+    
+    // Update pagination
+    updatePagination();
+  }
+  
+  // Function to update pagination buttons
+  function updatePagination() {
+    const paginationContainer = document.getElementById('pagination');
+    paginationContainer.innerHTML = '';
+    
+    if (totalPages <= 1) {
+      return; // Don't show pagination if there's only one page
+    }
+    
+    // Previous button
+    const prevButton = document.createElement('button');
+    prevButton.innerHTML = '<i class="fa-solid fa-chevron-left"></i>';
+    prevButton.disabled = currentPage === 1;
+    prevButton.addEventListener('click', () => {
+      if (currentPage > 1) {
+        currentPage--;
+        populateUsers(users);
+      }
+    });
+    paginationContainer.appendChild(prevButton);
+    
+    // Page buttons
+    const maxVisibleButtons = 5;
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisibleButtons / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisibleButtons - 1);
+    
+    // Adjust start page if we're near the end
+    if (endPage - startPage + 1 < maxVisibleButtons) {
+      startPage = Math.max(1, endPage - maxVisibleButtons + 1);
+    }
+    
+    for (let i = startPage; i <= endPage; i++) {
+      const pageButton = document.createElement('button');
+      pageButton.textContent = i;
+      if (i === currentPage) {
+        pageButton.classList.add('active');
+      }
+      pageButton.addEventListener('click', () => {
+        currentPage = i;
+        populateUsers(users);
+      });
+      paginationContainer.appendChild(pageButton);
+    }
+    
+    // Next button
+    const nextButton = document.createElement('button');
+    nextButton.innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
+    nextButton.disabled = currentPage === totalPages;
+    nextButton.addEventListener('click', () => {
+      if (currentPage < totalPages) {
+        currentPage++;
+        populateUsers(users);
+      }
+    });
+    paginationContainer.appendChild(nextButton);
+  }
+  
+  // Initialize by fetching users from API
+  fetchUsers();
+  
+  // Search functionality
+  const searchBtn = document.getElementById('searchBtn');
+  if (searchBtn) {
+    searchBtn.addEventListener('click', function() {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      const roleFilter = document.getElementById('roleFilter').value;
+    
+    let filteredUsers = users;
+    
+    // Filter by search term
+    if (searchTerm) {
+      filteredUsers = filteredUsers.filter(user => 
+        user.name.toLowerCase().includes(searchTerm) ||
+        user.studentId.toLowerCase().includes(searchTerm) ||
+        user.id.toString().includes(searchTerm)
+      );
+    }
+    
+    // Filter by role
+    if (roleFilter !== 'all') {
+      filteredUsers = filteredUsers.filter(user => 
+        user.role === roleFilter
+      );
+    }
+    
+    // Reset to first page when searching
+    currentPage = 1;
+    populateUsers(filteredUsers);
+  });
+  }
+  
+  // Refresh button
+  document.getElementById('refreshBtn').addEventListener('click', function() {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('roleFilter').value = 'all';
+    currentPage = 1; // Reset to first page
+    fetchUsers(); // Fetch fresh data from server
+  });
+  
+  // Modal functionality
+  const modal = document.getElementById('userModal');
+  const closeModal = document.getElementById('closeModal');
+  const cancelForm = document.getElementById('cancelForm');
+  const addUserBtn = document.getElementById('addUserBtn');
+  
+  // Edit user
+  function editUser(userId) {
+    // Find the user
+    const user = users.find(u => u.id === userId);
+    if (user) {
+      // Set modal title
+      document.getElementById('modalTitle').innerText = 'Edit User';
+      
+      // Set form values
+      document.getElementById('userId').value = userId;
+      document.getElementById('userName').value = user.name;
+      document.getElementById('userStudentId').value = user.studentId;
+      document.getElementById('userRole').value = user.role;
+      document.getElementById('userPassword').value = '';
+      
+      // Show modal
+      modal.style.display = 'block';
+    }
+  }
+  
+  // Add new user
+  addUserBtn.onclick = function() {
+    // Set modal title
+    document.getElementById('modalTitle').innerText = 'Add New User';
+    
+    // Clear form values
+    document.getElementById('userId').value = '';
+    document.getElementById('userName').value = '';
+    document.getElementById('userStudentId').value = '';
+    document.getElementById('userRole').value = 'user';
+    document.getElementById('userPassword').value = '';
+    
+    // Show modal
+    modal.style.display = 'block';
+  }
+  
+  // Close modal when clicking X
+  closeModal.onclick = function() {
+    modal.style.display = 'none';
+  }
+  
+  // Close modal when clicking Cancel
+  cancelForm.onclick = function() {
+    modal.style.display = 'none';
+  }
+  
+  // Close modal when clicking outside
+  window.onclick = function(event) {
+    if (event.target === modal) {
+      modal.style.display = 'none';
+    }
+    if (!event.target.closest('.profile-dropdown')) {
+      document.getElementById('profileMenu').classList.remove('show');
+    }
+  }
+  
+  // Handle form submission
+  document.getElementById('userForm').onsubmit = async function(e) {
+    e.preventDefault();
+    
+    const userId = document.getElementById('userId').value;
+    const name = document.getElementById('userName').value;
+    const studentId = document.getElementById('userStudentId').value;
+    const role = document.getElementById('userRole').value;
+    const password = document.getElementById('userPassword').value;
+    
+    try {
+      if (userId) {
+        // Update existing user via API
+        const response = await fetch(`http://localhost:3000/api/users/${userId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            name,
+            student_id: studentId,
+            role,
+            password: password || undefined // Only send password if provided
+          })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          alert(`User ${name} updated successfully.`);
+        } else {
+          alert(`Error: ${data.message || 'Failed to update user'}`);
+          return;
+        }
+      } else {
+        // Add new user via API
+        if (!password) {
+          alert('Password is required for new users.');
+          return;
+        }
+        
+        const response = await fetch('http://localhost:3000/api/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            name,
+            student_id: studentId,
+            role,
+            password
+          })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          alert(`User ${name} added successfully.`);
+        } else {
+          alert(`Error: ${data.message || 'Failed to add user'}`);
+          return;
+        }
+      }
+      
+      // Refresh table with updated data from server
+      fetchUsers();
+      
+      // Close modal
+      modal.style.display = 'none';
+    } catch (error) {
+      console.error('Error saving user:', error);
+      alert(`Error: ${error.message || 'An unexpected error occurred'}`);
+    }
+  }
+  
+  // Reset password modal
+  const resetModal = document.createElement('div');
+  resetModal.id = 'resetModal';
+  resetModal.className = 'modal';
+  resetModal.innerHTML = `
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Reset Password</h2>
+        <span class="close-btn" id="closeResetModal">&times;</span>
+      </div>
+      <form id="resetForm">
+        <input type="hidden" id="resetUserId">
+        <div class="form-group">
+          <label for="newPassword">New Password:</label>
+          <input type="password" id="newPassword" required>
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password:</label>
+          <input type="password" id="confirmPassword" required>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="cancel-btn" id="cancelReset">Cancel</button>
+          <button type="submit" class="save-btn">Reset Password</button>
+        </div>
+      </form>
+    </div>
+  `;
+  document.body.appendChild(resetModal);
+
+  // Reset password function
+  function resetPassword(userId) {
+    const user = users.find(u => u.id === userId);
+    if (user) {
+      // Set user ID in form
+      document.getElementById('resetUserId').value = userId;
+      document.getElementById('newPassword').value = '';
+      document.getElementById('confirmPassword').value = '';
+      
+      // Show modal
+      resetModal.style.display = 'block';
+      
+      // Close modal when clicking X
+      document.getElementById('closeResetModal').onclick = function() {
+        resetModal.style.display = 'none';
+      }
+      
+      // Close modal when clicking Cancel
+      document.getElementById('cancelReset').onclick = function() {
+        resetModal.style.display = 'none';
+      }
+      
+      // Close modal when clicking outside
+      window.onclick = function(event) {
+        if (event.target === resetModal) {
+          resetModal.style.display = 'none';
+        }
+        if (event.target === modal) {
+          modal.style.display = 'none';
+        }
+        if (!event.target.closest('.profile-dropdown')) {
+          document.getElementById('profileMenu').classList.remove('show');
+        }
+      }
+      
+      // Handle form submission
+      document.getElementById('resetForm').onsubmit = async function(e) {
+        e.preventDefault();
+        
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        
+        if (newPassword !== confirmPassword) {
+          alert('Passwords do not match!');
+          return;
+        }
+        
+        try {
+          const response = await fetch(`http://localhost:3000/api/users/${userId}/reset-password`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              password: newPassword
+            })
+          });
+          
+          const data = await response.json();
+          
+          if (data.success) {
+            alert(`Password for ${user.name} has been reset.`);
+            resetModal.style.display = 'none';
+          } else {
+            alert(`Error: ${data.message || 'Failed to reset password'}`);
+          }
+        } catch (error) {
+          console.error('Error resetting password:', error);
+          alert(`Error: ${error.message || 'An unexpected error occurred'}`);
+        }
+      }
+    }
+  }
+  
+  // Delete user function
+  async function deleteUser(userId) {
+    const user = users.find(u => u.id === userId);
+    if (user) {
+      if (confirm(`Are you sure you want to delete user ${user.name}?`)) {
+        try {
+          const response = await fetch(`http://localhost:3000/api/users/${userId}`, {
+            method: 'DELETE'
+          });
+          
+          const data = await response.json();
+          
+          if (data.success) {
+            alert(`User ${user.name} has been deleted.`);
+            fetchUsers(); // Refresh the user list
+          } else {
+            alert(`Error: ${data.message || 'Failed to delete user'}`);
+          }
+        } catch (error) {
+          console.error('Error deleting user:', error);
+          alert(`Error: ${error.message || 'An unexpected error occurred'}`);
+        }
+      }
+    }
+  }
+</script>
+</body>
+</html>

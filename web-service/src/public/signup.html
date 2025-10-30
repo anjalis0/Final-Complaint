@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Signup</title>
+    <link rel="stylesheet" href="./assets/style.css">
+    <script src="https://kit.fontawesome.com/e7df210b8c.js" crossorigin="anonymous"></script>
+</head>
+<body class="auth-bg">
+    <header class="navbar"></header>
+    <div class="auth-container">
+      <h2><i class="fa-solid fa-user-plus"></i> Signup</h2>
+      <form id="signupForm">
+          <input type="text" name="name" placeholder="Full Name" required>
+          <input type="text" name="student_id" placeholder="Student ID (Format: 2023XXXX)" required pattern="2023\d{4}" title="Student ID must start with 2023 followed by 4 digits">
+          <input type="password" name="password" placeholder="Password" required>
+          <select name="role" required>
+              <option value="student">Student</option>
+              <option value="teacher">Teacher</option>
+          </select>
+          <button class="login start-now" type="submit">Signup</button>
+      </form>
+      <div class="msg" id="msg"></div>
+      <a class="switch-link" href="login.html">Already have an account? Login</a>
+      <a class="switch-link" href="index.html">Back to Home</a>
+    </div>
+    <script>
+    document.getElementById('signupForm').onsubmit = async function(e) {
+        e.preventDefault();
+        console.log('Signup form submitted');
+        const msgElement = document.getElementById('msg');
+        const submitButton = this.querySelector('button[type="submit"]');
+        
+        try {
+            // Disable submit button and show loading state
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creating account...';
+            msgElement.innerText = '';
+            
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+            
+            // Client-side validation
+            if (!/^2023\d{4}$/.test(data.student_id)) {
+                throw new Error('Student ID must be in format: 2023XXXX');
+            }
+            
+            if (data.password.length < 6) {
+                throw new Error('Password must be at least 6 characters long');
+            }
+            
+            let res;
+            try {
+                // Always use localhost:3000 for API calls since that's where the server is running
+                console.log('Connecting to http://localhost:3000/api/signup');
+                res = await fetch('http://localhost:3000/api/signup', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+                
+                if (!res.ok) {
+                    throw new Error('Network response was not ok');
+                }
+            } catch (fetchError) {
+                console.error('Fetch error:', fetchError);
+                throw new Error('Failed to connect to the server. Please make sure the server is running.');
+            }
+            
+            const result = await res.json();
+            if(result.success) {
+                msgElement.style.color = 'green';
+                msgElement.innerText = 'Account created successfully! Redirecting to login...';
+                
+                // Redirect to login page after a short delay
+                setTimeout(() => {
+                    window.location.href = "login.html";
+                }, 1500);
+            } else {
+                throw new Error(result.message || 'Signup failed');
+            }
+        } catch (error) {
+            msgElement.style.color = 'red';
+            msgElement.innerText = error.message || 'An error occurred during signup';
+        } finally {
+            // Reset button state if not redirecting
+            if (!msgElement.innerText.includes('Redirecting')) {
+                submitButton.disabled = false;
+                submitButton.innerHTML = 'Signup';
+            }
+        }
+    };
+    </script>
+</body>
+</html>

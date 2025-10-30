@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Complaints</title>
+  <link rel="stylesheet" href="./assets/style.css">
+  <script src="https://kit.fontawesome.com/e7df210b8c.js" crossorigin="anonymous"></script>
+  <style>
+    .complaints-container {
+      background-color: white;
+      padding: 20px;
+      margin-top: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      overflow-x: auto; /* Add horizontal scroll for small screens */
+    }
+    .complaints-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .complaints-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed; /* Fixed table layout for better control */
+    }
+    .complaints-table th, .complaints-table td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+      word-wrap: break-word; /* Allow text to wrap */
+    }
+    /* Set specific widths for columns */
+    .complaints-table th:nth-child(1), .complaints-table td:nth-child(1) { width: 8%; } /* ID */
+    .complaints-table th:nth-child(2), .complaints-table td:nth-child(2) { width: 30%; } /* Subject */
+    .complaints-table th:nth-child(3), .complaints-table td:nth-child(3) { width: 15%; } /* Category */
+    .complaints-table th:nth-child(4), .complaints-table td:nth-child(4) { width: 15%; } /* Date */
+    .complaints-table th:nth-child(5), .complaints-table td:nth-child(5) { width: 15%; } /* Status */
+    .complaints-table th:nth-child(6), .complaints-table td:nth-child(6) { width: 17%; } /* Actions */
+    .complaints-table th {
+      background-color: #f5f5f5;
+      font-weight: bold;
+    }
+    .complaints-table tr:hover {
+      background-color: #f9f9f9;
+    }
+    .status-badge {
+      padding: 5px 10px;
+      border-radius: 12px;
+      font-size: 0.85em;
+      font-weight: 500;
+      display: inline-block; /* Ensure badge is always visible */
+      min-width: 80px; /* Minimum width for better visibility */
+      text-align: center; /* Center text in badge */
+    }
+    .status-pending {
+      background-color: #ffecb3;
+      color: #ff8f00;
+    }
+    .status-processing {
+      background-color: #e3f2fd;
+      color: #1976d2;
+    }
+    .status-resolved {
+      background-color: #e8f5e9;
+      color: #388e3c;
+    }
+    .status-rejected {
+      background-color: #ffebee;
+      color: #d32f2f;
+    }
+    .action-buttons {
+      display: flex;
+      gap: 5px;
+      flex-wrap: nowrap; /* Prevent buttons from wrapping */
+      justify-content: space-around; /* Distribute space evenly */
+    }
+    .action-buttons button {
+      border: none;
+      background-color: #f0f8ff; /* Light background for better visibility */
+      color: #1976d2;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 4px;
+      min-width: 32px; /* Minimum width for better clickability */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .action-buttons button:hover {
+      background-color: #e3f2fd;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #666;
+    }
+    .empty-state i {
+      font-size: 3em;
+      color: #ddd;
+      margin-bottom: 15px;
+    }
+    .empty-state p {
+      margin: 10px 0;
+    }
+    .empty-state .submit-btn {
+      display: inline-block;
+      margin-top: 15px;
+    }
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+    }
+    .modal-content {
+      background-color: white;
+      margin: 10% auto;
+      padding: 20px;
+      border-radius: 8px;
+      width: 60%;
+      max-width: 600px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .modal-header h2 {
+      margin: 0;
+    }
+    .close-btn {
+      font-size: 1.5em;
+      cursor: pointer;
+    }
+    .complaint-details {
+      margin-top: 20px;
+    }
+    .detail-row {
+      display: flex;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #f0f0f0;
+      padding-bottom: 10px;
+    }
+    .detail-label {
+      font-weight: bold;
+      width: 120px;
+      color: #555;
+    }
+    .detail-value {
+      flex: 1;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+    .detail-value.status {
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body class="dashboard-bg">
+  <!-- Consistent Navbar for all pages -->
+  <header class="navbar">
+    <div class="logo">
+      <a href="index.html"><img src="./assets/img/logo.png" alt="Logo" height="70px"></a>
+    </div>
+    <nav class="links">
+      <li><a href="dashboard.html" class="nb">Dashboard</a></li>
+      <li><a href="my-complaints.html" class="nb active">My Complaints</a></li>
+      <li><a href="submit-complaint.html" class="nb">Submit Complaint</a></li>
+      <li><a href="track-complaint.html" class="nb">Track Complaint</a></li>
+      <li>
+        <div class="profile-dropdown">
+          <button class="profile-btn" id="profileBtn">
+            <i class="fa-solid fa-user-circle"></i>
+            <span id="profileName"></span>
+            <i class="fa-solid fa-caret-down"></i>
+          </button>
+          <div class="profile-menu" id="profileMenu">
+            <div class="profile-info">
+              <i class="fa-solid fa-user"></i>
+              <div>
+                <div><strong id="profileUsername">Username</strong></div>
+                <div id="profileEmail" style="font-size:0.95em;color:#666;"></div>
+              </div>
+            </div>
+            <div class="profile-details">
+              <p><i class="fa-solid fa-id-card"></i> Student ID: <span id="profileEmailDetail"></span></p>
+              <p><i class="fa-solid fa-calendar"></i> Joined: <span id="profileJoined"></span></p>
+            </div>
+            <button class="logout-btn" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+          </div>
+        </div>
+      </li>
+    </nav>
+  </header>
+  
+  <div class="container">
+    <h1><i class="fa-solid fa-list-check"></i> My Complaints</h1>
+    <p>View and track all your submitted complaints in one place.</p>
+    
+    <div class="complaints-container">
+      <div class="complaints-header">
+        <h2>Your Complaints</h2>
+        <a href="submit-complaint.html" class="submit-btn"><i class="fa-solid fa-plus"></i> New Complaint</a>
+      </div>
+      
+      <div id="complaintsTableContainer">
+        <!-- Table will be inserted here by JavaScript -->
+      </div>
+    </div>
+  </div>
+  
+  <!-- Complaint Details Modal -->
+  <div id="complaintModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Complaint Details</h2>
+        <span class="close-btn" id="closeModal">&times;</span>
+      </div>
+      <div class="complaint-details">
+        <div class="detail-row">
+          <span class="detail-label">Complaint ID:</span>
+          <span class="detail-value" id="modalComplaintId"></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Subject:</span>
+          <span class="detail-value" id="modalSubject"></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Category:</span>
+          <span class="detail-value" id="modalCategory"></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Status:</span>
+          <span class="detail-value status" id="modalStatus"></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Submitted:</span>
+          <span class="detail-value" id="modalDate"></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Description:</span>
+          <span class="detail-value" id="modalDescription"></span>
+        </div>
+        <div class="detail-row" id="modalAttachmentRow" style="display: none;">
+          <span class="detail-label">Attachment:</span>
+          <span class="detail-value" id="modalAttachment">
+            <a href="#" id="modalAttachmentLink" target="_blank">View Attachment</a>
+          </span>
+        </div>
+        <div class="detail-row" id="modalNotesRow">
+          <span class="detail-label">Admin Notes:</span>
+          <span class="detail-value" id="modalNotes"></span>
+        </div>
+      </div>
+      <div class="status-timeline" id="statusTimelineContainer">
+        <h3>Status Timeline</h3>
+        <ul id="statusTimeline">
+          <!-- Timeline items will be added here -->
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+  // Check if user is logged in
+  const userName = localStorage.getItem('userName');
+  const userStudentId = localStorage.getItem('userStudentId');
+  const userRole = localStorage.getItem('userRole');
+  
+  // Redirect to login page if not logged in
+  if (!userName || !userStudentId) {
+    window.location.href = "login.html";
+  }
+  
+  // Set user info from localStorage
+  const userJoined = localStorage.getItem('userJoined') || '2025-07-07';
+
+  document.getElementById('profileName').innerText = userName;
+  document.getElementById('profileUsername').innerText = userName;
+  document.getElementById('profileEmail').innerText = userStudentId;
+  document.getElementById('profileEmailDetail').innerText = userStudentId;
+  document.getElementById('profileJoined').innerText = userJoined;
+
+  // Dropdown toggle
+  document.getElementById('profileBtn').onclick = function(e) {
+    e.stopPropagation();
+    document.getElementById('profileMenu').classList.toggle('show');
+  };
+  // Hide dropdown when clicking outside
+  window.onclick = function(event) {
+    if (!event.target.closest('.profile-dropdown')) {
+      document.getElementById('profileMenu').classList.remove('show');
+    }
+    if (event.target == document.getElementById('complaintModal')) {
+      document.getElementById('complaintModal').style.display = "none";
+    }
+  }
+  // Logout functionality
+  document.getElementById('logoutBtn').onclick = function() {
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userStudentId');
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('userJoined');
+    window.location.href = "index.html";
+  };
+  
+  // Close modal when clicking the X
+  document.getElementById('closeModal').onclick = function() {
+    document.getElementById('complaintModal').style.display = "none";
+  };
+  
+  // Function to format date
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+  }
+  
+  // Function to get status badge HTML
+  function getStatusBadge(status) {
+    const statusClasses = {
+      'pending': 'status-pending',
+      'processing': 'status-processing',
+      'resolved': 'status-resolved',
+      'rejected': 'status-rejected'
+    };
+    
+    const statusClass = statusClasses[status.toLowerCase()] || 'status-pending';
+    return `<span class="status-badge ${statusClass}">${status}</span>`;
+  }
+  
+  // Function to show complaint details in modal
+  function showComplaintDetails(complaintId) {
+    // Fetch complaint details
+      fetch(`http://localhost:3000/api/complaints/${complaintId}/track?student_id=${userStudentId}`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch complaint details');
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.success && data.complaint) {
+          const complaint = data.complaint;
+          
+          // Fill modal with complaint details
+          document.getElementById('modalComplaintId').textContent = complaint.id;
+          document.getElementById('modalSubject').textContent = complaint.title || 'No Subject';
+          document.getElementById('modalCategory').textContent = complaint.category || 'Not Specified';
+          document.getElementById('modalStatus').textContent = complaint.status;
+          document.getElementById('modalStatus').className = 'detail-value status';
+          document.getElementById('modalStatus').classList.add(`status-${complaint.status.toLowerCase()}`);
+          document.getElementById('modalDate').textContent = formatDate(complaint.created_at);
+          document.getElementById('modalDescription').textContent = complaint.description || 'No description available';
+          
+          // Show/hide attachment based on availability
+          if (complaint.attachment_path) {
+            console.log('Attachment path:', complaint.attachment_path);
+            // Make sure the path is absolute
+            const attachmentPath = complaint.attachment_path.startsWith('/') ? 
+              complaint.attachment_path : '/' + complaint.attachment_path;
+            document.getElementById('modalAttachmentLink').href = attachmentPath;
+            document.getElementById('modalAttachmentRow').style.display = 'flex';
+          } else {
+            document.getElementById('modalAttachmentRow').style.display = 'none';
+          }
+          
+          // Show/hide admin notes based on availability
+          if (complaint.admin_notes) {
+            document.getElementById('modalNotes').textContent = complaint.admin_notes;
+            document.getElementById('modalNotesRow').style.display = 'flex';
+          } else {
+            document.getElementById('modalNotesRow').style.display = 'none';
+          }
+          
+          // Create timeline
+          const timelineContainer = document.getElementById('statusTimeline');
+          timelineContainer.innerHTML = '';
+          
+          // Add initial submission to timeline
+          const initialLi = document.createElement('li');
+          initialLi.innerHTML = `
+            <div class="timeline-date">${formatDate(complaint.created_at)}</div>
+            <div class="timeline-status">Submitted</div>
+            <div class="timeline-note">Complaint received</div>
+          `;
+          timelineContainer.appendChild(initialLi);
+          
+          // Add status updates to timeline if available
+          if (complaint.status_history && complaint.status_history.length > 0) {
+            // Sort by timestamp in descending order (newest first)
+            const sortedHistory = [...complaint.status_history].sort((a, b) => 
+              new Date(b.timestamp) - new Date(a.timestamp)
+            );
+            
+            sortedHistory.forEach(update => {
+              const li = document.createElement('li');
+              li.innerHTML = `
+                <div class="timeline-date">${formatDate(update.timestamp)}</div>
+                <div class="timeline-status">${update.status}</div>
+                <div class="timeline-note">${update.note || 'Status updated'}</div>
+              `;
+              timelineContainer.appendChild(li);
+            });
+          }
+          
+          // Show the modal
+          document.getElementById('complaintModal').style.display = 'block';
+        } else {
+          alert('Failed to load complaint details');
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching complaint details:', error);
+        alert('Error: ' + error.message);
+      });
+  }
+  
+  // Function to load user complaints
+  async function loadUserComplaints() {
+    try {
+      console.log('Fetching complaints for student ID:', userStudentId);
+      // First get the user's database ID from their student ID
+      const userResponse = await fetch(`http://localhost:3000/api/user?student_id=${userStudentId}`);
+      const userData = await userResponse.json();
+      
+      if (!userData.success) {
+        throw new Error('Failed to fetch user data');
+      }
+      
+      const userId = userData.user.id;
+      console.log('User database ID:', userId);
+      
+      const response = await fetch(`http://localhost:3000/api/complaints?user_id=${userId}&role=student`);
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch complaints');
+      }
+      
+      const data = await response.json();
+      const tableContainer = document.getElementById('complaintsTableContainer');
+      
+      if (data.success) {
+        if (data.complaints && data.complaints.length > 0) {
+          // Create table with complaints
+          let tableHTML = `
+            <table class="complaints-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Subject</th>
+                  <th>Category</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+          `;
+          
+          data.complaints.forEach(complaint => {
+            tableHTML += `
+              <tr>
+                <td>${complaint.id}</td>
+                <td>${complaint.title || 'No Subject'}</td>
+                <td>${complaint.category || 'Not Specified'}</td>
+                <td>${formatDate(complaint.created_at)}</td>
+                <td>${getStatusBadge(complaint.status)}</td>
+                <td>
+                  <div class="action-buttons">
+                    <button onclick="showComplaintDetails(${complaint.id})" title="View Details">
+                      <i class="fa-solid fa-eye"></i>
+                    </button>
+                    <button onclick="window.location.href='track-complaint.html?id=${complaint.id}'" title="Track Complaint">
+                      <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            `;
+          });
+          
+          tableHTML += `
+              </tbody>
+            </table>
+          `;
+          
+          tableContainer.innerHTML = tableHTML;
+        } else {
+          // Show empty state
+          tableContainer.innerHTML = `
+            <div class="empty-state">
+              <i class="fa-solid fa-inbox"></i>
+              <h3>No complaints found</h3>
+              <p>You haven't submitted any complaints yet.</p>
+              <a href="submit-complaint.html" class="submit-btn">Submit a Complaint</a>
+            </div>
+          `;
+        }
+      } else {
+        throw new Error(data.message || 'Failed to load complaints');
+      }
+    } catch (error) {
+      console.error('Error loading complaints:', error);
+      document.getElementById('complaintsTableContainer').innerHTML = `
+        <div class="empty-state">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <h3>Error loading complaints</h3>
+          <p>${error.message || 'Failed to connect to the server'}</p>
+          <button onclick="loadUserComplaints()" class="submit-btn">Try Again</button>
+        </div>
+      `;
+    }
+  }
+  
+  // Load complaints when page loads
+  window.onload = function() {
+    loadUserComplaints();
+  };
+  </script>
+</body>
+</html>

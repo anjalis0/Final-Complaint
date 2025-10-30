@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Submit Complaint</title>
+  <link rel="stylesheet" href="./assets/style.css">
+  <script src="https://kit.fontawesome.com/e7df210b8c.js" crossorigin="anonymous"></script>
+</head>
+<body class="dashboard-bg">
+  <!-- Consistent Navbar for all pages -->
+  <header class="navbar">
+    <div class="logo">
+      <a href="index.html"><img src="./assets/img/logo.png" alt="Logo" height="70px"></a>
+    </div>
+    <nav class="links">
+      <li><a href="submit-complaint.html" class="nb active">Submit Complaint</a></li>
+      <li><a href="track-complaint.html" class="nb">Track Complaint</a></li>
+      <li><a href="my-complaints.html" class="nb"><i class="fa-solid fa-list-check"></i> My Complaints</a></li>
+      <li>
+        <div class="profile-dropdown">
+          <button class="profile-btn" id="profileBtn">
+            <i class="fa-solid fa-user-circle"></i>
+            <span id="profileName"></span>
+            <i class="fa-solid fa-caret-down"></i>
+          </button>
+          <div class="profile-menu" id="profileMenu">
+            <div class="profile-info">
+              <i class="fa-solid fa-user"></i>
+              <div>
+                <div><strong id="profileUsername">Username</strong></div>
+                <div id="profileEmail" style="font-size:0.95em;color:#666;"></div>
+              </div>
+            </div>
+            <div class="profile-details">
+              <p><i class="fa-solid fa-id-card"></i> Student ID: <span id="profileEmailDetail"></span></p>
+              <p><i class="fa-solid fa-calendar"></i> Joined: <span id="profileJoined"></span></p>
+            </div>
+            <button class="logout-btn" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+          </div>
+        </div>
+      </li>
+    </nav>
+  </header>
+  
+  <div class="form-container">
+    <h1><i class="fa-solid fa-plus"></i> Submit a New Complaint</h1>
+    <form id="complaintForm">
+      <div class="form-group">
+        <label for="subject">Subject</label>
+        <input type="text" id="subject" name="title" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="category">Category</label>
+        <select id="category" name="category" required>
+          <option value="Academic">Academic</option>
+          <option value="Administrative">Administrative</option>
+          <option value="Facilities">Facilities</option>
+          <option value="Technical">Technical</option>
+          <option value="Other">Other</option>
+          <option value="General" selected>General</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" name="description" rows="5" required></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label for="attachment">Attachment (optional)</label>
+        <input type="file" id="attachment" name="attachment">
+      </div>
+      
+      <button type="submit" class="submit-btn">Submit Complaint</button>
+    </form>
+  </div>
+  
+  <script>
+  // Check if user is logged in and has appropriate role
+  const userName = localStorage.getItem('userName');
+  const userStudentId = localStorage.getItem('userStudentId');
+  const userRole = localStorage.getItem('userRole');
+  
+  // Validate user authentication and authorization
+  if (!userName || !userStudentId || !userRole) {
+    alert('Please log in to submit a complaint.');
+    window.location.href = "login.html";
+    localStorage.clear(); // Clear any invalid session data
+  } else if (userRole === 'admin') {
+    alert('Administrators cannot submit complaints. Please use the admin dashboard.');
+    window.location.href = "admin-dashboard.html";
+  } else if (!['student', 'teacher'].includes(userRole)) {
+    alert('Invalid user role. Please log in again.');
+    window.location.href = "login.html";
+    localStorage.clear();
+  }
+  
+  // Set user info from localStorage
+  const userJoined = localStorage.getItem('userJoined') || '2025-07-07';
+
+  document.getElementById('profileName').innerText = userName;
+  document.getElementById('profileUsername').innerText = userName;
+  document.getElementById('profileEmail').innerText = userStudentId;
+  document.getElementById('profileEmailDetail').innerText = userStudentId;
+  document.getElementById('profileJoined').innerText = userJoined;
+
+  // Dropdown toggle
+  document.getElementById('profileBtn').onclick = function(e) {
+    e.stopPropagation();
+    document.getElementById('profileMenu').classList.toggle('show');
+  };
+  // Hide dropdown when clicking outside
+  window.onclick = function(event) {
+    if (!event.target.closest('.profile-dropdown')) {
+      document.getElementById('profileMenu').classList.remove('show');
+    }
+  }
+  // Logout functionality
+  document.getElementById('logoutBtn').onclick = function() {
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('userJoined');
+    window.location.href = "index.html";
+  };
+  
+  // Handle form submission
+  document.getElementById('complaintForm').onsubmit = async function(e) {
+    e.preventDefault();
+    
+    // Collect form values
+    const subjectInput = document.getElementById('subject');
+    const categoryInput = document.getElementById('category');
+    const descriptionInput = document.getElementById('description');
+    const attachmentInput = document.getElementById('attachment');
+    
+    // Get student_id from localStorage (set at login)
+    const studentId = localStorage.getItem('userStudentId');
+    if (!studentId) {
+      alert('Missing student ID. Please log in again.');
+      window.location.href = 'login.html';
+      return;
+    }
+    
+    // Prepare multipart form data to support optional file upload
+    const formData = new FormData();
+    formData.append('student_id', studentId);
+    formData.append('title', (subjectInput.value || '').trim());
+    formData.append('category', categoryInput.value);
+    formData.append('description', (descriptionInput.value || '').trim());
+    if (attachmentInput.files && attachmentInput.files[0]) {
+      formData.append('attachment', attachmentInput.files[0]);
+    }
+    
+    // Show loading state
+    const submitBtn = document.querySelector('.submit-btn');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Submitting...';
+    submitBtn.disabled = true;
+    
+    try {
+      const response = await fetch('http://localhost:3000/api/submit-complaint', {
+        method: 'POST',
+        body: formData
+      });
+      
+      const result = await response.json();
+      if (result.success) {
+        this.reset();
+        if (result.complaint_id) {
+          window.location.href = `thank-you.html?id=${result.complaint_id}`;
+        } else {
+          window.location.href = 'thank-you.html';
+        }
+      } else {
+        alert('Error: ' + (result.message || 'Failed to submit complaint'));
+      }
+    } catch (error) {
+      console.error('Error submitting complaint:', error);
+      alert('Error: Failed to submit complaint. Please try again.');
+    } finally {
+      submitBtn.textContent = originalText;
+      submitBtn.disabled = false;
+    }
+  };
+  </script>
+</body>
+</html>

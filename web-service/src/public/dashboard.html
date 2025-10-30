@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="./assets/style.css">
+  <script src="https://kit.fontawesome.com/e7df210b8c.js" crossorigin="anonymous"></script>
+</head>
+<body class="dashboard-bg">
+  <!-- Consistent Navbar for all pages -->
+  <header class="navbar">
+    <div class="logo">
+      <a href="index.html"><img src="./assets/img/logo.png" alt="Logo" height="70px"></a>
+    </div>
+    <nav class="links">
+   
+      <li><a href="submit-complaint.html" class="nb">Submit Complaint</a></li>
+      <li><a href="track-complaint.html" class="nb">Track Complaint</a></li>
+      <li>
+        <div class="profile-dropdown">
+          <button class="profile-btn" id="profileBtn">
+            <i class="fa-solid fa-user-circle"></i>
+            <span id="profileName"></span>
+            <i class="fa-solid fa-caret-down"></i>
+          </button>
+          <div class="profile-menu" id="profileMenu">
+            <div class="profile-info">
+              <i class="fa-solid fa-user"></i>
+              <div>
+                <div><strong id="profileUsername">Username</strong></div>
+                <div id="profileEmail" style="font-size:0.95em;color:#666;"></div>
+              </div>
+            </div>
+            <div class="profile-details">
+              <p><i class="fa-solid fa-id-card"></i> Student ID: <span id="profileEmailDetail"></span></p>
+              <p><i class="fa-solid fa-calendar"></i> Joined: <span id="profileJoined"></span></p>
+            </div>
+            <button class="logout-btn" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+          </div>
+        </div>
+      </li>
+    </nav>
+  </header>
+  <div class="dashboard-container">
+    <h1><i class="fa-solid fa-gauge-high"></i> Welcome to your Dashboard!</h1>
+    <p>Manage your complaints, track progress, and stay updated with Smart Complaint Management System.</p>
+    <div class="dashboard-actions">
+      <a href="submit-complaint.html" class="submit-btn"><i class="fa-solid fa-plus"></i> Submit Complaint</a>
+      <a href="track-complaint.html" class="track-btn"><i class="fa-solid fa-magnifying-glass"></i> Track Complaint</a>
+      <a href="my-complaints.html" class="track-btn"><i class="fa-solid fa-list-check"></i> My Complaints</a>
+    </div>
+    <div class="dashboard-info">
+      <i class="fa-solid fa-circle-info"></i> Need help? Visit our <a href="about.html" style="color:#1976d2;text-decoration:underline;">About</a> page or <a href="#contact" style="color:#1976d2;text-decoration:underline;">Contact</a> us.
+    </div>
+  </div>
+  <script>
+  // Check if user is logged in
+  const userName = localStorage.getItem('userName');
+  const userStudentId = localStorage.getItem('userStudentId');
+  
+  // Redirect to login page if not logged in
+  if (!userName || !userStudentId) {
+    window.location.href = "login.html";
+  }
+  
+  // Set user info from localStorage
+  const userJoined = localStorage.getItem('userJoined') || '2025-07-07';
+
+  document.getElementById('profileName').innerText = userName;
+  document.getElementById('profileUsername').innerText = userName;
+  document.getElementById('profileEmail').innerText = userStudentId;
+  document.getElementById('profileEmailDetail').innerText = userStudentId;
+  document.getElementById('profileJoined').innerText = userJoined;
+
+  // Dropdown toggle
+  document.getElementById('profileBtn').onclick = function(e) {
+    e.stopPropagation();
+    document.getElementById('profileMenu').classList.toggle('show');
+  };
+  // Hide dropdown when clicking outside
+  window.onclick = function(event) {
+    if (!event.target.closest('.profile-dropdown')) {
+      document.getElementById('profileMenu').classList.remove('show');
+    }
+  }
+  // Logout functionality
+  document.getElementById('logoutBtn').onclick = function() {
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userStudentId');
+    localStorage.removeItem('userJoined');
+    window.location.href = "index.html";
+  };
+</script>
+</body>
+</html>
