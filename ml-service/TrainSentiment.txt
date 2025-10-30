@@ -1,0 +1,420 @@
+The new attendance portal is user-friendly.|Positive
+Printing service is available during lunch.|Neutral
+Exam results were delayed again.|Negative
+The hostel is well-maintained and quiet.|Positive
+Printing service is available during lunch.|Neutral
+The admin office is extremely slow in response.|Negative
+The new library system is very efficient.|Positive
+Printing service is available during lunch.|Neutral
+The admin office is extremely slow in response.|Negative
+I enjoyed the career development workshop.|Positive
+Staff is usually available on working days.|Neutral
+Exam results were delayed again.|Negative
+The teacher was very helpful and polite.|Positive
+Printing service is available during lunch.|Neutral
+Toilets are not cleaned regularly.|Negative
+The new attendance portal is user-friendly.|Positive
+Printing service is available during lunch.|Neutral
+Toilets are not cleaned regularly.|Negative
+Cultural fest was organized very professionally.|Positive
+Wi-Fi works well in library but not in hostel.|Neutral
+Toilets are not cleaned regularly.|Negative
+Wi-Fi speed is excellent during evening hours.|Positive
+The classroom chairs are average.|Neutral
+Library AC is not working at all.|Negative
+The hostel is well-maintained and quiet.|Positive
+Wi-Fi works well in library but not in hostel.|Neutral
+The admin office is extremely slow in response.|Negative
+Wi-Fi speed is excellent during evening hours.|Positive
+The classroom chairs are average.|Neutral
+There is no proper seating in classrooms.|Negative
+The new attendance portal is user-friendly.|Positive
+Staff is usually available on working days.|Neutral
+Fan in the classroom is broken.|Negative
+Cultural fest was organized very professionally.|Positive
+Water cooler works but takes time.|Neutral
+Exam results were delayed again.|Negative
+The canteen food quality has improved recently.|Positive
+Staff is usually available on working days.|Neutral
+There is no proper seating in classrooms.|Negative
+The new library system is very efficient.|Positive
+The classroom chairs are average.|Neutral
+Fan in the classroom is broken.|Negative
+Wi-Fi speed is excellent during evening hours.|Positive
+The classroom chairs are average.|Neutral
+Water supply gets cut off frequently.|Negative
+Classrooms are very clean and well-ventilated.|Positive
+The classroom chairs are average.|Neutral
+Wi-Fi never works in the hostel.|Negative
+I enjoyed the career development workshop.|Positive
+The campus shop is open on weekdays.|Neutral
+Toilets are not cleaned regularly.|Negative
+The canteen food quality has improved recently.|Positive
+Water cooler works but takes time.|Neutral
+Water supply gets cut off frequently.|Negative
+The new attendance portal is user-friendly.|Positive
+The seminar was okay, not too engaging.|Neutral
+Fan in the classroom is broken.|Negative
+The teacher was very helpful and polite.|Positive
+Water cooler works but takes time.|Neutral
+Wi-Fi never works in the hostel.|Negative
+I enjoyed the career development workshop.|Positive
+The campus shop is open on weekdays.|Neutral
+The admin office is extremely slow in response.|Negative
+Wi-Fi speed is excellent during evening hours.|Positive
+The course schedule is sometimes inconsistent.|Neutral
+Water supply gets cut off frequently.|Negative
+Wi-Fi speed is excellent during evening hours.|Positive
+The classroom chairs are average.|Neutral
+Exam results were delayed again.|Negative
+The new attendance portal is user-friendly.|Positive
+The seminar was okay, not too engaging.|Neutral
+The canteen food is stale and unhygienic.|Negative
+I enjoyed the career development workshop.|Positive
+Projector sometimes doesn t turn on instantly.|Neutral
+Library AC is not working at all.|Negative
+The new attendance portal is user-friendly.|Positive
+The seminar was okay, not too engaging.|Neutral
+The canteen food is stale and unhygienic.|Negative
+The teacher was very helpful and polite.|Positive
+Canteen menu remains unchanged for months.|Neutral
+There is no proper seating in classrooms.|Negative
+Administrative staff handled my issue promptly.|Positive
+The course schedule is sometimes inconsistent.|Neutral
+There is no proper seating in classrooms.|Negative
+Wi-Fi speed is excellent during evening hours.|Positive
+Projector sometimes doesn t turn on instantly.|Neutral
+Library AC is not working at all.|Negative
+The new library system is very efficient.|Positive
+The campus shop is open on weekdays.|Neutral
+The admin office is extremely slow in response.|Negative
+The new attendance portal is user-friendly.|Positive
+Wi-Fi works well in library but not in hostel.|Neutral
+Fan in the classroom is broken.|Negative
+The hostel is well-maintained and quiet.|Positive
+The seminar was okay, not too engaging.|Neutral
+Exam results were delayed again.|Negative
+The hostel is well-maintained and quiet.|Positive
+Staff is usually available on working days.|Neutral
+The admin office is extremely slow in response.|Negative
+Administrative staff handled my issue promptly.|Positive
+Printing service is available during lunch.|Neutral
+Water supply gets cut off frequently.|Negative
+The canteen food quality has improved recently.|Positive
+Staff is usually available on working days.|Neutral
+Exam results were delayed again.|Negative
+Cultural fest was organized very professionally.|Positive
+Wi-Fi works well in library but not in hostel.|Neutral
+Exam results were delayed again.|Negative
+Administrative staff handled my issue promptly.|Positive
+Staff is usually available on working days.|Neutral
+Toilets are not cleaned regularly.|Negative
+Cultural fest was organized very professionally.|Positive
+Wi-Fi works well in library but not in hostel.|Neutral
+Toilets are not cleaned regularly.|Negative
+Cultural fest was organized very professionally.|Positive
+The classroom chairs are average.|Neutral
+Water supply gets cut off frequently.|Negative
+The hostel is well-maintained and quiet.|Positive
+Canteen menu remains unchanged for months.|Neutral
+Water supply gets cut off frequently.|Negative
+Administrative staff handled my issue promptly.|Positive
+Printing service is available during lunch.|Neutral
+Water supply gets cut off frequently.|Negative
+The new library system is very efficient.|Positive
+The course schedule is sometimes inconsistent.|Neutral
+Library AC is not working at all.|Negative
+Wi-Fi speed is excellent during evening hours.|Positive
+Canteen menu remains unchanged for months.|Neutral
+Wi-Fi never works in the hostel.|Negative
+I enjoyed the career development workshop.|Positive
+The campus shop is open on weekdays.|Neutral
+The canteen food is stale and unhygienic.|Negative
+Wi-Fi speed is excellent during evening hours.|Positive
+Wi-Fi works well in library but not in hostel.|Neutral
+Security at night is not visible anywhere.|Negative
+Cultural fest was organized very professionally.|Positive
+Printing service is available during lunch.|Neutral
+Security at night is not visible anywhere.|Negative
+The new library system is very efficient.|Positive
+Wi-Fi works well in library but not in hostel.|Neutral
+The admin office is extremely slow in response.|Negative
+The canteen food quality has improved recently.|Positive
+Projector sometimes doesn t turn on instantly.|Neutral
+There is no proper seating in classrooms.|Negative
+The teacher was very helpful and polite.|Positive
+Printing service is available during lunch.|Neutral
+Library AC is not working at all.|Negative
+The hostel is well-maintained and quiet.|Positive
+Staff is usually available on working days.|Neutral
+There is no proper seating in classrooms.|Negative
+The new library system is very efficient.|Positive
+The course schedule is sometimes inconsistent.|Neutral
+Fan in the classroom is broken.|Negative
+The teacher was very helpful and polite.|Positive
+The course schedule is sometimes inconsistent.|Neutral
+There is no proper seating in classrooms.|Negative
+The canteen food quality has improved recently.|Positive
+The course schedule is sometimes inconsistent.|Neutral
+Exam results were delayed again.|Negative
+The hostel is well-maintained and quiet.|Positive
+Canteen menu remains unchanged for months.|Neutral
+Toilets are not cleaned regularly.|Negative
+Wi-Fi speed is excellent during evening hours.|Positive
+Staff is usually available on working days.|Neutral
+The admin office is extremely slow in response.|Negative
+Administrative staff handled my issue promptly.|Positive
+Water cooler works but takes time.|Neutral
+The admin office is extremely slow in response.|Negative
+Wi-Fi speed is excellent during evening hours.|Positive
+Water cooler works but takes time.|Neutral
+Toilets are not cleaned regularly.|Negative
+Administrative staff handled my issue promptly.|Positive
+Water cooler works but takes time.|Neutral
+Toilets are not cleaned regularly.|Negative
+The new library system is very efficient.|Positive
+Water cooler works but takes time.|Neutral
+Toilets are not cleaned regularly.|Negative
+I enjoyed the career development workshop.|Positive
+Water cooler works but takes time.|Neutral
+There is no proper seating in classrooms.|Negative
+The new library system is very efficient.|Positive
+The classroom chairs are average.|Neutral
+Water supply gets cut off frequently.|Negative
+Wi-Fi speed is excellent during evening hours.|Positive
+Projector sometimes doesn t turn on instantly.|Neutral
+Toilets are not cleaned regularly.|Negative
+I enjoyed the career development workshop.|Positive
+Canteen menu remains unchanged for months.|Neutral
+There is no proper seating in classrooms.|Negative
+I enjoyed the career development workshop.|Positive
+The campus shop is open on weekdays.|Neutral
+Toilets are not cleaned regularly.|Negative
+The new library system is very efficient.|Positive
+Canteen menu remains unchanged for months.|Neutral
+Security at night is not visible anywhere.|Negative
+The new attendance portal is user-friendly.|Positive
+The seminar was okay, not too engaging.|Neutral
+Fan in the classroom is broken.|Negative
+Classrooms are very clean and well-ventilated.|Positive
+Printing service is available during lunch.|Neutral
+There is no proper seating in classrooms.|Negative
+The hostel is well-maintained and quiet.|Positive
+The classroom chairs are average.|Neutral
+The admin office is extremely slow in response.|Negative
+Cultural fest was organized very professionally.|Positive
+Projector sometimes doesn t turn on instantly.|Neutral
+The admin office is extremely slow in response.|Negative
+The new library system is very efficient.|Positive
+Water cooler works but takes time.|Neutral
+Exam results were delayed again.|Negative
+Wi-Fi speed is excellent during evening hours.|Positive
+The course schedule is sometimes inconsistent.|Neutral
+Exam results were delayed again.|Negative
+The canteen food quality has improved recently.|Positive
+The campus shop is open on weekdays.|Neutral
+The admin office is extremely slow in response.|Negative
+I enjoyed the career development workshop.|Positive
+Water cooler works but takes time.|Neutral
+Fan in the classroom is broken.|Negative
+The new library system is very efficient.|Positive
+Staff is usually available on working days.|Neutral
+The canteen food is stale and unhygienic.|Negative
+I enjoyed the career development workshop.|Positive
+The classroom chairs are average.|Neutral
+Library AC is not working at all.|Negative
+The teacher was very helpful and polite.|Positive
+Staff is usually available on working days.|Neutral
+Wi-Fi never works in the hostel.|Negative
+The new attendance portal is user-friendly.|Positive
+Wi-Fi works well in library but not in hostel.|Neutral
+The canteen food is stale and unhygienic.|Negative
+The new attendance portal is user-friendly.|Positive
+The campus shop is open on weekdays.|Neutral
+Exam results were delayed again.|Negative
+I enjoyed the career development workshop.|Positive
+Projector sometimes doesn t turn on instantly.|Neutral
+Wi-Fi never works in the hostel.|Negative
+Administrative staff handled my issue promptly.|Positive
+The seminar was okay, not too engaging.|Neutral
+Fan in the classroom is broken.|Negative
+The hostel is well-maintained and quiet.|Positive
+The campus shop is open on weekdays.|Neutral
+Fan in the classroom is broken.|Negative
+Cultural fest was organized very professionally.|Positive
+Staff is usually available on working days.|Neutral
+Exam results were delayed again.|Negative
+The teacher was very helpful and polite.|Positive
+The course schedule is sometimes inconsistent.|Neutral
+Toilets are not cleaned regularly.|Negative
+Classrooms are very clean and well-ventilated.|Positive
+The classroom chairs are average.|Neutral
+Security at night is not visible anywhere.|Negative
+The canteen food quality has improved recently.|Positive
+Wi-Fi works well in library but not in hostel.|Neutral
+Toilets are not cleaned regularly.|Negative
+Administrative staff handled my issue promptly.|Positive
+Projector sometimes doesn t turn on instantly.|Neutral
+The admin office is extremely slow in response.|Negative
+The canteen food quality has improved recently.|Positive
+The campus shop is open on weekdays.|Neutral
+Exam results were delayed again.|Negative
+The teacher was very helpful and polite.|Positive
+Printing service is available during lunch.|Neutral
+There is no proper seating in classrooms.|Negative
+The teacher was very helpful and polite.|Positive
+The course schedule is sometimes inconsistent.|Neutral
+Library AC is not working at all.|Negative
+I enjoyed the career development workshop.|Positive
+Staff is usually available on working days.|Neutral
+Wi-Fi never works in the hostel.|Negative
+Wi-Fi speed is excellent during evening hours.|Positive
+Projector sometimes doesn t turn on instantly.|Neutral
+Toilets are not cleaned regularly.|Negative
+Cultural fest was organized very professionally.|Positive
+Canteen menu remains unchanged for months.|Neutral
+There is no proper seating in classrooms.|Negative
+The new attendance portal is user-friendly.|Positive
+Projector sometimes doesn t turn on instantly.|Neutral
+The admin office is extremely slow in response.|Negative
+Classrooms are very clean and well-ventilated.|Positive
+Printing service is available during lunch.|Neutral
+There is no proper seating in classrooms.|Negative
+The new library system is very efficient.|Positive
+Printing service is available during lunch.|Neutral
+Exam results were delayed again.|Negative
+Classrooms are very clean and well-ventilated.|Positive
+Projector sometimes doesn t turn on instantly.|Neutral
+Security at night is not visible anywhere.|Negative
+Administrative staff handled my issue promptly.|Positive
+Staff is usually available on working days.|Neutral
+The canteen food is stale and unhygienic.|Negative
+The new library system is very efficient.|Positive
+Printing service is available during lunch.|Neutral
+Library AC is not working at all.|Negative
+The new attendance portal is user-friendly.|Positive
+The campus shop is open on weekdays.|Neutral
+Exam results were delayed again.|Negative
+Administrative staff handled my issue promptly.|Positive
+Canteen menu remains unchanged for months.|Neutral
+There is no proper seating in classrooms.|Negative
+Administrative staff handled my issue promptly.|Positive
+The course schedule is sometimes inconsistent.|Neutral
+Wi-Fi never works in the hostel.|Negative
+The new attendance portal is user-friendly.|Positive
+The campus shop is open on weekdays.|Neutral
+Exam results were delayed again.|Negative
+The new library system is very efficient.|Positive
+Projector sometimes doesn t turn on instantly.|Neutral
+Library AC is not working at all.|Negative
+Administrative staff handled my issue promptly.|Positive
+The classroom chairs are average.|Neutral
+Toilets are not cleaned regularly.|Negative
+Cultural fest was organized very professionally.|Positive
+Canteen menu remains unchanged for months.|Neutral
+The canteen food is stale and unhygienic.|Negative
+I enjoyed the career development workshop.|Positive
+Water cooler works but takes time.|Neutral
+Wi-Fi never works in the hostel.|Negative
+Wi-Fi speed is excellent during evening hours.|Positive
+The seminar was okay, not too engaging.|Neutral
+Wi-Fi never works in the hostel.|Negative
+Classrooms are very clean and well-ventilated.|Positive
+Staff is usually available on working days.|Neutral
+Wi-Fi never works in the hostel.|Negative
+The teacher was very helpful and polite.|Positive
+The seminar was okay, not too engaging.|Neutral
+Water supply gets cut off frequently.|Negative
+Wi-Fi speed is excellent during evening hours.|Positive
+Staff is usually available on working days.|Neutral
+Water supply gets cut off frequently.|Negative
+Classrooms are very clean and well-ventilated.|Positive
+Water cooler works but takes time.|Neutral
+There is no proper seating in classrooms.|Negative
+The new library system is very efficient.|Positive
+Printing service is available during lunch.|Neutral
+Security at night is not visible anywhere.|Negative
+The canteen food quality has improved recently.|Positive
+Wi-Fi works well in library but not in hostel.|Neutral
+Exam results were delayed again.|Negative
+The hostel is well-maintained and quiet.|Positive
+Canteen menu remains unchanged for months.|Neutral
+Wi-Fi never works in the hostel.|Negative
+The canteen food quality has improved recently.|Positive
+The course schedule is sometimes inconsistent.|Neutral
+The admin office is extremely slow in response.|Negative
+The hostel is well-maintained and quiet.|Positive
+The classroom chairs are average.|Neutral
+Water supply gets cut off frequently.|Negative
+Cultural fest was organized very professionally.|Positive
+Wi-Fi works well in library but not in hostel.|Neutral
+Wi-Fi never works in the hostel.|Negative
+The new library system is very efficient.|Positive
+The classroom chairs are average.|Neutral
+Security at night is not visible anywhere.|Negative
+The hostel is well-maintained and quiet.|Positive
+Water cooler works but takes time.|Neutral
+Fan in the classroom is broken.|Negative
+Wi-Fi speed is excellent during evening hours.|Positive
+The seminar was okay, not too engaging.|Neutral
+Wi-Fi never works in the hostel.|Negative
+The new attendance portal is user-friendly.|Positive
+Water cooler works but takes time.|Neutral
+The admin office is extremely slow in response.|Negative
+The teacher was very helpful and polite.|Positive
+The campus shop is open on weekdays.|Neutral
+Fan in the classroom is broken.|Negative
+The canteen food quality has improved recently.|Positive
+Canteen menu remains unchanged for months.|Neutral
+There is no proper seating in classrooms.|Negative
+Wi-Fi speed is excellent during evening hours.|Positive
+Water cooler works but takes time.|Neutral
+Security at night is not visible anywhere.|Negative
+The new attendance portal is user-friendly.|Positive
+The classroom chairs are average.|Neutral
+The canteen food is stale and unhygienic.|Negative
+Classrooms are very clean and well-ventilated.|Positive
+Staff is usually available on working days.|Neutral
+Toilets are not cleaned regularly.|Negative
+Classrooms are very clean and well-ventilated.|Positive
+Printing service is available during lunch.|Neutral
+Exam results were delayed again.|Negative
+The hostel is well-maintained and quiet.|Positive
+Staff is usually available on working days.|Neutral
+Exam results were delayed again.|Negative
+Wi-Fi speed is excellent during evening hours.|Positive
+Wi-Fi works well in library but not in hostel.|Neutral
+The admin office is extremely slow in response.|Negative
+The teacher was very helpful and polite.|Positive
+Projector sometimes doesn t turn on instantly.|Neutral
+Library AC is not working at all.|Negative
+The hostel is well-maintained and quiet.|Positive
+Printing service is available during lunch.|Neutral
+Security at night is not visible anywhere.|Negative
+The new library system is very efficient.|Positive
+Projector sometimes doesn t turn on instantly.|Neutral
+Security at night is not visible anywhere.|Negative
+The teacher was very helpful and polite.|Positive
+Canteen menu remains unchanged for months.|Neutral
+Wi-Fi never works in the hostel.|Negative
+The teacher was very helpful and polite.|Positive
+Staff is usually available on working days.|Neutral
+Fan in the classroom is broken.|Negative
+I enjoyed the career development workshop.|Positive
+The classroom chairs are average.|Neutral
+Toilets are not cleaned regularly.|Negative
+The teacher was very helpful and polite.|Positive
+Staff is usually available on working days.|Neutral
+Wi-Fi never works in the hostel.|Negative
+Classrooms are very clean and well-ventilated.|Positive
+The classroom chairs are average.|Neutral
+Security at night is not visible anywhere.|Negative
+The teacher was very helpful and polite.|Positive
+The campus shop is open on weekdays.|Neutral
+Library AC is not working at all.|Negative
+The new library system is very efficient.|Positive
+Water cooler works but takes time.|Neutral
+Water supply gets cut off frequently.|Negative
+The hostel is well-maintained and quiet.|Positive
+The seminar was okay, not too engaging.|Neutral
+The canteen food is stale and unhygienic.|Negative
