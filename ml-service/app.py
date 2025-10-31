@@ -1,9 +1,12 @@
 import json
+import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from pydantic import BaseModel
 from custom_model import vector_tfidf_model, parse_sentiment_file, parse_priority_file
+
+logging.basicConfig(level=logging.INFO)
 
 
 class PredictRequest(BaseModel):
@@ -12,19 +15,17 @@ class PredictRequest(BaseModel):
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print("Loading models...")
+    logging.info("Loading models...")
+    vector_tfidf_model('sentiment_vector_tfidf.pkl', ['TrainSentiment.txt'], parse_sentiment_file)
 
-    vector_tfidf_model('sentiment_vector_tfidf.pkl', ['train_sentiment.txt'], parse_sentiment_file)
-    print("Sentiment model loaded.")
-
+    logging.info("Sentiment model loaded.")
     vector_tfidf_model('priority_vector_tfidf.pkl', ['TrainPriority.txt'], parse_priority_file)
-    print("Priority model loaded.")
 
-    print("ML API is up and running ...")
+    logging.info("ML API is up and running ...")
 
     yield
 
-    print("Shutting down...")
+    logging.info("Shutting down...")
 
 
 app = FastAPI(lifespan=lifespan)
@@ -48,7 +49,6 @@ async def predict(request: PredictRequest):
         priority = "3"
     else:
         priority = "1"
-        
 
     return json.dumps({"sentiment": sentiment, "priority": priority})
 
