@@ -24,7 +24,7 @@ uvicorn app:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 
-### to run the model evaluation and accuracy
+### to run the model evaluation and accuracy with tranning dataset length.
 ```
-python custom_model.py
+python custom_model.py --train-fraction 0.85
 ```
