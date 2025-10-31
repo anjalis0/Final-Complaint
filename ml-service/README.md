@@ -22,3 +22,9 @@ Run the following command on from ther terminal, api will be running on port 800
 ```sh
 uvicorn app:app --host 0.0.0.0 --port 8000 --reload
 ```
+
+
+### to run the model evaluation and accuracy
+```
+python custom_model.py
+```

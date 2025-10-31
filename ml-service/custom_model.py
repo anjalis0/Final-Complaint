@@ -5,6 +5,7 @@ from collections import defaultdict, Counter
 import re
 import random
 import logging
+import argparse
 
 # Configure logging
 logging.basicConfig(
@@ -341,7 +342,7 @@ if __name__ == "__main__":
     logging.info("🚀 Starting VectorNaiveBayesTFIDF Example")
     logging.info("=" * 60)
 
-    def run_dataset_pipeline(dataset_file, parser, model_name):
+    def run_dataset_pipeline(dataset_file, parser, model_name, train_fraction=0.99):
         """Parse, train, evaluate and save a model for a single dataset file.
 
         dataset_file: path to dataset file
@@ -367,7 +368,18 @@ if __name__ == "__main__":
         print_data_balance(data)
 
         random.shuffle(data)
-        split_index = int(0.99 * len(data))
+        # Validate train_fraction
+        try:
+            train_fraction = float(train_fraction)
+        except Exception:
+            logging.warning(f"Invalid train_fraction provided ({train_fraction}), defaulting to 0.99")
+            train_fraction = 0.99
+
+        if train_fraction <= 0 or train_fraction >= 1:
+            logging.warning(f"train_fraction should be between 0 and 1 (exclusive). Received {train_fraction}. Clamping to valid range.")
+            train_fraction = min(max(train_fraction, 0.01), 0.99)
+
+        split_index = int(train_fraction * len(data))
         train_data = data[:split_index]
         test_data = data[split_index:]
         logging.info(f"Training set: {len(train_data)} samples")
@@ -406,8 +418,17 @@ if __name__ == "__main__":
         ("TrainPriority.txt", parse_priority_file, "model_priority"),
     ]
 
+    # Parse CLI arguments for dynamic train/test split
+    parser_arg = argparse.ArgumentParser(description='Train TF-IDF Naive Bayes models with dynamic train/test split')
+    parser_arg.add_argument('--train-fraction', '-t', type=float, default=0.99,
+                            help='Fraction of data to use for training (0 < fraction < 1). Default: 0.99')
+    args = parser_arg.parse_args()
+
+    train_fraction = args.train_fraction
+    logging.info(f"Using train fraction: {train_fraction}")
+
     for file, parser, model_name in todo_runs:
-        run_dataset_pipeline(file, parser, model_name)
+        run_dataset_pipeline(file, parser, model_name, train_fraction=train_fraction)
 
     logging.info("🎉 All pipelines complete!")
     logging.info("=" * 60)
