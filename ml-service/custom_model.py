@@ -158,7 +158,6 @@ class VectorNaiveBayesTFIDF:
         predicted_class = max(scores, key=scores.get)
         logging.info(f"Prediction scores: {dict(scores)}")
         logging.info(f"PREDICTED CLASS: {predicted_class}")
-        
         return predicted_class
 
     # -------- Save & Load --------
@@ -316,13 +315,12 @@ def evaluate_model(model, test_data):
     correct = 0
     total = len(test_data)
     logging.info(f"Evaluating model on {total} test samples")
-    
+    # Print detailed info for every test sample (no filtering)
     for i, (text, true_label) in enumerate(test_data):
         logging.info(f"\n--- Test Sample {i+1}/{total} ---")
         pred = model.predict(text)
         logging.info(f"Text: {text}")
         logging.info(f"True: {true_label}, Predicted: {pred}")
-        
         if pred == true_label:
             correct += 1
             logging.info("✓ CORRECT")
@@ -342,33 +340,74 @@ def evaluate_model(model, test_data):
 if __name__ == "__main__":
     logging.info("🚀 Starting VectorNaiveBayesTFIDF Example")
     logging.info("=" * 60)
-    
-    # Load and prepare dataset
-    logging.info("Loading dataset...")
-    dataset = parse_sentiment_file('TrainSentiment.txt')
-    # dataset = parse_priority_file('TrainPriority.txt')
-    logging.info(f"Total samples loaded: {len(dataset)}")
-    
-    # Analyze dataset balance
-    print_data_balance(dataset)
-    
-    # Shuffle and split dataset
-    logging.info("Shuffling and splitting dataset (96% train, 4% test)")
-    random.shuffle(dataset)
-    split_index = int(0.96 * len(dataset))
-    train_data = dataset[:split_index]
-    test_data = dataset[split_index:]
-    logging.info(f"Training set: {len(train_data)} samples")
-    logging.info(f"Test set: {len(test_data)} samples")
 
-    # Train model
-    logging.info("Creating and training model...")
-    model = VectorNaiveBayesTFIDF()
-    model.train(train_data)
+    def run_dataset_pipeline(dataset_file, parser, model_name):
+        """Parse, train, evaluate and save a model for a single dataset file.
 
-    # Evaluate model
-    logging.info("Starting model evaluation...")
-    evaluate_model(model, test_data)
-    
-    logging.info("🎉 Example complete!")
+        dataset_file: path to dataset file
+        parser: function to parse the dataset file and return list[(text, label)]
+        model_name: base name used to save the trained model under `models/`
+        """
+        logging.info("\n" + "-" * 60)
+        logging.info(f"Pipeline start for dataset: {dataset_file}")
+        try:
+            data = parser(dataset_file)
+        except FileNotFoundError:
+            logging.error(f"Dataset file not found: {dataset_file}. Skipping.")
+            return None
+        except Exception as e:
+            logging.exception(f"Failed to parse dataset {dataset_file}: {e}")
+            return None
+
+        logging.info(f"Total samples loaded from {dataset_file}: {len(data)}")
+        if len(data) == 0:
+            logging.warning(f"No samples found in {dataset_file}. Skipping training.")
+            return None
+
+        print_data_balance(data)
+
+        random.shuffle(data)
+        split_index = int(0.99 * len(data))
+        train_data = data[:split_index]
+        test_data = data[split_index:]
+        logging.info(f"Training set: {len(train_data)} samples")
+        logging.info(f"Test set: {len(test_data)} samples")
+
+        logging.info("Creating and training model...")
+        model = VectorNaiveBayesTFIDF()
+        try:
+            model.train(train_data)
+        except Exception:
+            logging.exception("Error during training. Aborting this dataset pipeline.")
+            return None
+
+        if len(test_data) > 0:
+            logging.info("Starting model evaluation...")
+            try:
+                evaluate_model(model, test_data)
+            except Exception:
+                logging.exception("Error during evaluation (continuing).")
+
+        # Save the model
+        model_filename = f"{model_name}.pkl" if model_name.endswith('.pkl') else f"{model_name}.pkl"
+        try:
+            model.save(os.path.join('models', model_filename))
+        except Exception:
+            logging.exception(f"Failed to save model to models/{model_filename}")
+
+        logging.info(f"Pipeline complete for dataset: {dataset_file}")
+        logging.info("-" * 60 + "\n")
+        return model
+
+    # Run pipelines for both sentiment and priority datasets
+    # Note: parse_priority_file expects the file to define a `training_data` variable.
+    todo_runs = [
+        ("TrainSentiment.txt", parse_sentiment_file, "model_sentiment"),
+        ("TrainPriority.txt", parse_priority_file, "model_priority"),
+    ]
+
+    for file, parser, model_name in todo_runs:
+        run_dataset_pipeline(file, parser, model_name)
+
+    logging.info("🎉 All pipelines complete!")
     logging.info("=" * 60)
